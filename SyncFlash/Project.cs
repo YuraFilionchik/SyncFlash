@@ -23,6 +23,7 @@ namespace SyncFlash
         {
             get { return Directory.Exists(Dir); }
         }
+
         /// <summary>
         /// Dictionary<files,datetime last write> всех файлов в Projdir
         /// </summary>
@@ -49,6 +50,7 @@ namespace SyncFlash
                 return res;
             }
         }
+
         /// <summary>
         /// Показывает время подификации самого нового файла в папке Dir и одной подпапке внутрь
         /// </summary>
@@ -61,7 +63,7 @@ namespace SyncFlash
                 if (!IsOnline) return lastmod;
                 var files1 = AllFiles;
                 if (files1.Count == 0) return lastmod;//no one file in Dir and subdirs
-                return files1.Max(x => File.GetLastWriteTime(x));
+                return files1.Max(x => x.Value);
             }
         }
     }
