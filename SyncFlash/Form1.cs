@@ -14,6 +14,7 @@ namespace SyncFlash
         public Form1()
         {
             InitializeComponent();
+            
         }
     }
 }
