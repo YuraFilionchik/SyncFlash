@@ -17,6 +17,7 @@ namespace SyncFlash
         public const string AttDirName = "path";
         public const string PC_XML = "NetBios";
         public const string ExceptXML = "ExceptionDir";
+        public const string FlashDrive = "FLASHDRIVE";
 
         public static void invokeControlText(Control control, string text)
         {
@@ -33,6 +34,7 @@ namespace SyncFlash
         }
         public static void invokeProgress(ProgressBar bar, int value)
         {
+            if (value > 100) return;
             if (bar.InvokeRequired) bar.Invoke(new Action<int>(s => bar.Value = s), value);
             else bar.Value = value;
         }
@@ -152,7 +154,7 @@ namespace SyncFlash
                     var p = new Project(project.NAME);
                     foreach (var d in project.Dirs) 
                     {   //read directory for the project
-                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value, d.Attribute(CONSTS.PC_XML).Value);
+                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value.TrimEnd('\\'), d.Attribute(CONSTS.PC_XML).Value);
                         //add dirs exceptions
                         foreach (var e in d.Descendants(CONSTS.ExceptXML))
                             projDir.ExceptDirs.Add(e.Value);
@@ -165,7 +167,6 @@ namespace SyncFlash
             catch(Exception)
             { return Result; }
         }
-        //TODO remove project, Dirs
         public void SaveProjects(IEnumerable<Project> projects)
         {
             doc.Element(RootXMLProject).Elements().Remove();

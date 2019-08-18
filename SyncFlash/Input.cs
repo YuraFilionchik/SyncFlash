@@ -34,5 +34,12 @@ namespace SyncFlash
                 Close();
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var dr = folderBrowserDialog1.ShowDialog();
+            if (dr == DialogResult.OK) TEXT = folderBrowserDialog1.SelectedPath;
+                
+        }
     }
 }

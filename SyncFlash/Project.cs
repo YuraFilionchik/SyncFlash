@@ -153,15 +153,20 @@ namespace SyncFlash
             }
         }
         private string[] GetfilesIndir(string dir)
-        {
-            var res = new string[0];//TODO check filter exception dir
+        {//TODO check GetFiles
+            var res = new string[0];
             if (!Directory.Exists(dir) || ExceptDirs.Contains(dir))
                 return res;
             if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);
-            else foreach (var D in Directory.GetDirectories(dir))
+
+            else
+            {
+                res = res.Concat(Directory.GetFiles(dir)).ToArray();
+                foreach (var D in Directory.GetDirectories(dir))
                 {
                     res = res.Concat(GetfilesIndir(D)).ToArray();
                 }
+            }
             return res;
         }
         /// <summary>
@@ -193,7 +198,7 @@ namespace SyncFlash
            //key - filepath
            //value - datetime
             foreach (var filedate in this.AllFiles)
-            {//TODO implement method compair
+            {
                 var n0 = AllFiles.Count(x=>files2.Any(c=>c.Key==x.Key && c.Value<x.Value));
                 var n1 = AllFiles.Count(x => files2.Any(c => c.Key == x.Key && c.Value > x.Value));
                 var n2 = AllFiles.Count(x =>!files2.Any(c=>c.Key==x.Key));
