@@ -147,19 +147,22 @@ namespace SyncFlash
                             select new
                             {
                                 NAME = pr.Attribute("name").Value,
-                                Dirs = pr.Descendants(DirXML)
+                                Dirs = pr.Descendants(DirXML),
+                                ExcDirs = pr.Descendants(CONSTS.ExceptXML)
                             };
                 foreach (var project in projs) //read each project
                 {
                     var p = new Project(project.NAME);
-                    foreach (var d in project.Dirs) 
-                    {   //read directory for the project
-                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value.TrimEnd('\\'), d.Attribute(CONSTS.PC_XML).Value);
-                        //add dirs exceptions
-                        foreach (var e in d.Descendants(CONSTS.ExceptXML))
-                            projDir.ExceptDirs.Add(e.Value);
-                        p.AllProjectDirs.Add(projDir);
+                    foreach (var e in project.ExcDirs)
+                    {//Adding exceptions Dirs
+                        string exDir = e.Attribute(CONSTS.AttDirName).Value.ToString(); //Exception DIR path from XML file
+                            p.ExceptionDirs.Add(exDir);
                     }
+                    foreach (var d in project.Dirs)
+                    {   //read directory for the project
+                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value.TrimEnd('\\'),p, d.Attribute(CONSTS.PC_XML).Value);
+                        p.AllProjectDirs.Add(projDir);
+                     }
                     Result.Add(p);
                 }
                 return Result;

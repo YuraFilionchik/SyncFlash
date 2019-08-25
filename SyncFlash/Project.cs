@@ -12,6 +12,7 @@ namespace SyncFlash
     class Project
     {
         public List<Projdir> AllProjectDirs;
+        public List<string> ExceptionDirs;
         public List<Projdir> OnlineDirs
         {
             get
@@ -43,6 +44,7 @@ namespace SyncFlash
         {
             this.Name = name;
             AllProjectDirs = new List<Projdir>();
+            ExceptionDirs = new List<string>();
         }
 
         public void RemoveDir(string dir)
@@ -62,7 +64,7 @@ namespace SyncFlash
         /// </summary>
         /// <returns></returns>
         public XElement ToXElement()
-        {
+        {//TODO modify Exceptdir to XML
             var xel = new XElement(CONSTS.ProjXML);
             xel.SetAttributeValue("name", Name);
             
@@ -71,14 +73,16 @@ namespace SyncFlash
                 XElement xdir = new XElement(CONSTS.DirXML);
                 xdir.SetAttributeValue(CONSTS.PC_XML, dir.PC_Name);//имя компа в атрибутах
                 xdir.SetAttributeValue(CONSTS.AttDirName, dir.Dir);//путь к папке в атрибутах
-                //папки исключения
-                foreach (var exc in dir.ExceptDirs)
-                {
-                    xdir.Add(new XElement(CONSTS.ExceptXML, exc));//папки исключения внутри элемента 
-                }
                 xel.Add(xdir);
             }
-            
+            //папки исключения
+            foreach (var exc in ExceptionDirs)
+            {
+                XElement xdir = new XElement(CONSTS.ExceptXML);
+                xdir.SetAttributeValue(CONSTS.AttDirName, exc);//Папка исключения в атрибутах
+                xel.Add(xdir);
+            }
+
             return xel;
         }
     }
@@ -88,7 +92,7 @@ namespace SyncFlash
     class Projdir
     {
         private string _dir;
-        public List<string> ExceptDirs;
+        private Project FromProject;
         private string pc_name;
         /// <summary>
         /// Имя компъютера NetBios, на которой находится папка
@@ -113,26 +117,27 @@ namespace SyncFlash
         {
             get { return Directory.Exists(Dir); }
         }
+
         private DateTime DefaultDate= new DateTime(2000, 1, 1);
-        public Projdir(string dir)
+        public Projdir(string dir,Project project)
         {
             Dir = dir;
             pc_name= System.Environment.MachineName;
-            ExceptDirs = new List<string>();
+            FromProject = project;
         }
-        public Projdir(string dir, string pc)
+        public Projdir(string dir,Project project, string pc)
         {
             Dir = dir;
             pc_name = pc;
-            ExceptDirs = new List<string>();
+            FromProject = project;
         }
         /// <summary>
         /// Dictionary<files,datetime last write> всех файлов в Projdir
         /// </summary>
-        public  filesdates AllFiles
+        public  filesdates AllFiles()
         {
-            get
-            {
+            
+            
                 if (!IsOnline) return new filesdates();
                 //List<string> files1 = new List<string>();//all files in Dir
                 //files1.AddRange(Directory.GetFiles(Dir));//all files in Dir
@@ -150,12 +155,13 @@ namespace SyncFlash
                     res.Add(file, File.GetLastWriteTime(file));
                 }
                 return res;
-            }
+            
         }
         private string[] GetfilesIndir(string dir)
-        {//TODO check GetFiles
+        {
+            string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;
             var res = new string[0];
-            if (!Directory.Exists(dir) || ExceptDirs.Contains(dir))
+            if (!Directory.Exists(dir) || FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
                 return res;
             if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);
 
@@ -179,7 +185,7 @@ namespace SyncFlash
 
                 DateTime lastmod = DefaultDate; ;
                 if (!IsOnline) return lastmod;
-                var files1 = AllFiles;
+                var files1 = AllFiles();
                 if (files1.Count == 0) return lastmod;//no one file in Dir and subdirs
                 return files1.Max(x => x.Value);
             }
@@ -194,15 +200,16 @@ namespace SyncFlash
         public int[] CompairDir(Projdir Dir2)
         {
             int[] res = new int[2];
-            var files2 = Dir2.AllFiles; 
-           //key - filepath
-           //value - datetime
-            foreach (var filedate in this.AllFiles)
+            var files2 = Dir2.AllFiles();
+            //key - filepath
+            //value - datetime
+            var all = AllFiles();
+            foreach (var filedate in all)
             {
-                var n0 = AllFiles.Count(x=>files2.Any(c=>c.Key==x.Key && c.Value<x.Value));
-                var n1 = AllFiles.Count(x => files2.Any(c => c.Key == x.Key && c.Value > x.Value));
-                var n2 = AllFiles.Count(x =>!files2.Any(c=>c.Key==x.Key));
-                var n3 = files2.Count(x => !AllFiles.Any(c => c.Key == x.Key));
+                var n0 = all.Count(x=>files2.Any(c=>c.Key==x.Key && c.Value<x.Value));
+                var n1 = all.Count(x => files2.Any(c => c.Key == x.Key && c.Value > x.Value));
+                var n2 = all.Count(x =>!files2.Any(c=>c.Key==x.Key));
+                var n3 = files2.Count(x => !all.Any(c => c.Key == x.Key));
             }
 
             return res;
@@ -223,7 +230,7 @@ namespace SyncFlash
             if (IsOnline) res.Add("ONLINE == " + Dir); else res.Add("OFFLINE == " + Dir);
             if (LastMod == DefaultDate) res.Add("Dir Last Modif.: недоступно");
             else res.Add("Dir Last Modif.: "+LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
-            res.Add("Файлов \t:" + AllFiles.Count);
+            res.Add("Файлов \t:" + AllFiles().Count);
             return res;
         }
         public List<string> Info1()

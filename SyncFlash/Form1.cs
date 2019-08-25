@@ -46,7 +46,7 @@ namespace SyncFlash
             var selectedProj = Projects.FirstOrDefault(x => x.Name == List_Projects.SelectedItem.ToString());
             var selectedDir = selectedProj.AllProjectDirs.FirstOrDefault(x => x.Dir == list_dirs.SelectedItems[0].Text);
             //show Dir info
-            listExceptions.Items.AddRange(selectedDir.ExceptDirs.ToArray());
+           
             if (list_dirs.SelectedItems.Count==1)
             {
                 tblog.Text = selectedProj.Name + Environment.NewLine;
@@ -99,10 +99,20 @@ namespace SyncFlash
                 }
                 if(OnlineDirs.Count()>1)
                 {
-                    int count = 1;
-                    var sourceDir = OnlineDirs.First(x=>x.LastMod== OnlineDirs.Max(d => d.LastMod));// откуда будем копировать
+                    //DateTime t = DateTime.Now;
+                    int count = 0; //count of files in dir
+                    int cTotal = 0;
+                    Projdir sourceDir;
+                    //ищем папки с максимальной датой изменения файлов
+                    var Equaldirs = OnlineDirs.Where(x => x.LastMod == OnlineDirs.Max(d => d.LastMod));
+                    if (Equaldirs.Count() > 1)
+                    {//если по датам папки одинаковые, то выбираем ту, у которой файлов больше
+                        sourceDir = Equaldirs.First(x => x.AllFiles().Count == Equaldirs.Max(c => c.AllFiles().Count));
+                    }else //только одна папка с максимальной датой
+                     sourceDir = Equaldirs.First();// откуда будем копировать
                     var DestDirs = OnlineDirs.Where(x => x.Dir != sourceDir.Dir);       //в эти папки копирует новые данные
-                    if(DestDirs.All(x=>x.LastMod==sourceDir.LastMod)) { MessageBox.Show("Все папки одинаковые, нечего синхронизировать"); return; }
+                    if(DestDirs.All(x=>x.LastMod==sourceDir.LastMod && x.AllFiles().Count==sourceDir.AllFiles().Count))
+                    { MessageBox.Show("Все папки одинаковые, нечего синхронизировать"); return; }
                     string DirsToString = "";
                     CONSTS.invokeControlText(tblog, "From \t" + sourceDir.LastMod.ToString("dd.MM.yyyy hh:mm:ss") + "<=>" + sourceDir.Dir + " \t\t{" + sourceDir.PC_Name + "}");
                     foreach (var d in DestDirs)
@@ -112,44 +122,63 @@ namespace SyncFlash
                     }
                     var dr = MessageBox.Show("Будут скопированы обновленные и новые файлы из " + sourceDir.Dir + "\r\n в \r\n" + DirsToString,
                         project.Name, MessageBoxButtons.YesNo);
-                    
                     if (dr == DialogResult.No) return;
-                    foreach (var file in sourceDir.AllFiles)//процесс копирования
+                    CONSTS.invokeControlText(tblog, "--------------------------------");
+                    foreach (var destdir in DestDirs) //перебор папок назначения
                     {
-                        count++;
-                        foreach (var destdir in DestDirs)
-                        {//TODO check copiing
-                            if (!Directory.Exists(destdir.Dir)) Directory.CreateDirectory(destdir.Dir);
-                            
-                            if(destdir.AllFiles.Any(x=>GetRelationPath(x.Key,destdir.Dir)==GetRelationPath(file.Key,sourceDir.Dir)))//file exist
+                        if (!Directory.Exists(destdir.Dir)) Directory.CreateDirectory(destdir.Dir);
+                        Dictionary<string,DateTime> AllSourceFiles = sourceDir.AllFiles();
+                        Dictionary<string, DateTime> AllDestFiles = destdir.AllFiles();
+                        int cAllSource = AllSourceFiles.Count;
+                        cTotal += AllSourceFiles.Count;
+                        count = 0;
+                        int upd = 0;
+                        int nfile = 0;
+                        foreach (var file in AllSourceFiles)//процесс копирования
+                        {
+                            count++;
+                            var relfile = GetRelationPath(file.Key, sourceDir.Dir);
+                        if (AllDestFiles.Any(x => GetRelationPath(x.Key, destdir.Dir) == relfile))//file exist
+                        {
+                            var dfile = AllDestFiles.First(x => GetRelationPath(x.Key, destdir.Dir) == relfile);
+                            if (dfile.Value < file.Value)//файл назначения старше исходника
                             {
-                                var dfile = destdir.AllFiles.First(x => GetRelationPath(x.Key, destdir.Dir) == GetRelationPath(file.Key, sourceDir.Dir));
-                                if(dfile.Value<file.Value)//файл назначения старше исходника
-                                {
-                                    try { File.Copy(file.Key, dfile.Key, true); }
-                                    catch (Exception) { errorCopy++; }
-                                    updatedfiles++;
-                                }
-                                
-                                CONSTS.invokeProgress(progressBar1, (int)(count *100/ sourceDir.AllFiles.Count));
-                                
+                                try {
+                                        upd++;
+                                        File.Copy(file.Key, dfile.Key, true);
+                                        CONSTS.invokeControlText(tblog, "upd:> "+upd.ToString()+"). " + relfile);
+                                    }
+                                catch (Exception ex) { errorCopy++; CONSTS.invokeControlText(tblog, "err:>\t" + relfile + "\t" + ex.Message); }
+                                updatedfiles++;
                             }
-                            else //copy new file
-                            {
-                                string newfile = destdir.Dir + GetRelationPath(file.Key, sourceDir.Dir);
-                                string filedir = newfile.Remove(newfile.Length- newfile.Split('\\').Last().Length);
-                                if (!Directory.Exists(filedir)) Directory.CreateDirectory(filedir);
-                                try {File.Copy(file.Key, newfile, true); }
-                                catch (Exception) { errorCopy++; }
-                                CONSTS.invokeProgress(progressBar1, (int)(count*100 / sourceDir.AllFiles.Count));
-                                newfiles++;
-                            }
-                        }
 
+                            CONSTS.invokeProgress(progressBar1, (int)(count * 100 /cAllSource));
+
+                        }
+                        else //copy new file
+                        {
+                            string newfile = destdir.Dir + relfile;
+                            string filedir = newfile.Remove(newfile.Length - newfile.Split('\\').Last().Length);
+                            if (!Directory.Exists(filedir)) Directory.CreateDirectory(filedir);
+                            try {
+                                    nfile++;
+                                    File.Copy(file.Key, newfile, true);
+                                    CONSTS.invokeControlText(tblog, "new:>" + nfile.ToString() + "). " + relfile);
+                                }
+                            catch (Exception ex) { errorCopy++;
+                                    CONSTS.invokeControlText(tblog, "err:>\t" + relfile + "\t" + ex.Message);
+                                }
+                            CONSTS.invokeProgress(progressBar1, (int)(count * 100 / cAllSource));
+                            newfiles++;
+                        }
                     }//конец перебора исходных файлов
+
+                    }
+                    CONSTS.invokeControlText(tblog, "--------------------------------");
                     CONSTS.invokeControlText(tblog,project.Name+" синхронизирован.");
                     CONSTS.invokeControlText(tblog, "Новых файлов: \t"+newfiles.ToString());
                     CONSTS.invokeControlText(tblog, "Обновлено файлов:\t" + updatedfiles.ToString());
+                    CONSTS.invokeControlText(tblog, "Всего файлов:\t" +cTotal.ToString());
                     CONSTS.invokeControlText(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                 }
 
@@ -163,7 +192,7 @@ namespace SyncFlash
         /// <param name="fullpath"></param>
         /// <param name="projDir"></param>
         /// <returns></returns>
-        public string GetRelationPath(string fullpath,string projDir)
+        public static string GetRelationPath(string fullpath,string projDir)
         {
             string result = fullpath.Remove(0, projDir.Length);
             return result;
@@ -187,6 +216,7 @@ namespace SyncFlash
                 }
 
             }
+            listExceptions.Items.AddRange(selectedProj.ExceptionDirs.ToArray());
         }
         //Завершение программы
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -222,9 +252,11 @@ namespace SyncFlash
                 selected == null) return;
 
             if (!list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\')))) list_dirs.Items.Add(input.TEXT.TrimEnd('\\'));
-            Projects.First(x => x.Name == selected.ToString()).AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\'),CONSTS.FlashDrive));
+            var p=Projects.First(x => x.Name == selected.ToString());
+            p.AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\'),p,CONSTS.FlashDrive));
             SaveAllProjects();
         }
+
         private void добавитьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Input input = new Input();
@@ -235,7 +267,8 @@ namespace SyncFlash
                 selected == null) return;
            
             if(!list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\')))) list_dirs.Items.Add(input.TEXT.TrimEnd('\\'));
-            Projects.First(x => x.Name == selected.ToString()).AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\')));
+           var p= Projects.First(x => x.Name == selected.ToString());
+            p.AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\'),p));
             SaveAllProjects();
         }
 
@@ -272,12 +305,14 @@ namespace SyncFlash
             if (dg != DialogResult.OK) return;
             if (string.IsNullOrWhiteSpace(input.TEXT) ||
                 listExceptions.Items.Contains(input.TEXT)) return;
-            var d = Projects.First(x => x.Name == selected.ToString()). //selected dir
-                 AllProjectDirs.First(c => c.Dir == selectedDir[0].Text);//DIR
-            if (d.ExceptDirs.Contains(input.TEXT.TrimEnd('\\'))) return;
-            d.ExceptDirs.Add(input.TEXT.TrimEnd('\\'));
-            listExceptions.Items.Clear();
-            listExceptions.Items.AddRange(d.ExceptDirs.ToArray());
+            var pr = Projects.First(x => x.Name == selected.ToString()); //selected proj
+
+            string relpath = input.TEXT.TrimEnd('\\').Contains(":\\") ?
+                GetRelationPath(input.TEXT.TrimEnd('\\'), selectedDir[0].Text) : input.TEXT.TrimEnd('\\');
+            if (pr.ExceptionDirs.Contains(relpath)) return;
+            pr.ExceptionDirs.Add(relpath);//добавление относительного пути
+            listExceptions.Items.Clear(); 
+            listExceptions.Items.AddRange(pr.ExceptionDirs.ToArray());
             SaveAllProjects();
         }
 
@@ -290,14 +325,13 @@ namespace SyncFlash
             if (selectedDir.Count == 0) return;
             var selectedExc = listExceptions.SelectedItems;
             if (selectedExc.Count == 0) return;
-            var d = Projects.First(x => x.Name == selected.ToString()).
-                AllProjectDirs.First(c => c.Dir == selectedDir[0].Text);
+            var pr = Projects.First(x => x.Name == selected.ToString());
             string selExc = selectedExc[0].ToString();
-            if (!d.ExceptDirs.Contains(selExc))
+            if (!pr.ExceptionDirs.Contains(selExc))
                 return;
-            d.ExceptDirs.Remove(selExc);
+            pr.ExceptionDirs.Remove(selExc);
             listExceptions.Items.Clear();
-            listExceptions.Items.AddRange(d.ExceptDirs.ToArray());
+            listExceptions.Items.AddRange(pr.ExceptionDirs.ToArray());
             SaveAllProjects();
         }
         #endregion

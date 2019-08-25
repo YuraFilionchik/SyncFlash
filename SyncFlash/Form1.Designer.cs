@@ -33,10 +33,12 @@
             this.contextprojects = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.синхронизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.list_dirs = new System.Windows.Forms.ListView();
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.добавитьПапкуНаFlashDriveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tblog = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -45,8 +47,6 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.синхронизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -54,13 +54,13 @@
             // 
             // List_Projects
             // 
-            this.List_Projects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.List_Projects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.List_Projects.ContextMenuStrip = this.contextprojects;
             this.List_Projects.FormattingEnabled = true;
             this.List_Projects.Location = new System.Drawing.Point(3, 2);
             this.List_Projects.Name = "List_Projects";
-            this.List_Projects.Size = new System.Drawing.Size(148, 199);
+            this.List_Projects.Size = new System.Drawing.Size(148, 147);
             this.List_Projects.TabIndex = 0;
             // 
             // contextprojects
@@ -86,6 +86,13 @@
             this.удалитьПроектToolStripMenuItem.Text = "Удалить проект из списка";
             this.удалитьПроектToolStripMenuItem.Click += new System.EventHandler(this.удалитьПроектToolStripMenuItem_Click);
             // 
+            // синхронизироватьToolStripMenuItem
+            // 
+            this.синхронизироватьToolStripMenuItem.Name = "синхронизироватьToolStripMenuItem";
+            this.синхронизироватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.синхронизироватьToolStripMenuItem.Text = "-=Синхронизировать=-";
+            this.синхронизироватьToolStripMenuItem.Click += new System.EventHandler(this.синхронизироватьToolStripMenuItem_Click);
+            // 
             // list_dirs
             // 
             this.list_dirs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -94,7 +101,7 @@
             this.list_dirs.Location = new System.Drawing.Point(157, 2);
             this.list_dirs.MultiSelect = false;
             this.list_dirs.Name = "list_dirs";
-            this.list_dirs.Size = new System.Drawing.Size(368, 105);
+            this.list_dirs.Size = new System.Drawing.Size(368, 68);
             this.list_dirs.TabIndex = 2;
             this.list_dirs.UseCompatibleStateImageBehavior = false;
             this.list_dirs.View = System.Windows.Forms.View.List;
@@ -122,15 +129,23 @@
             this.удалитьПапкуToolStripMenuItem.Text = "Удалить папку";
             this.удалитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.удалитьПапкуToolStripMenuItem_Click);
             // 
+            // добавитьПапкуНаFlashDriveToolStripMenuItem
+            // 
+            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Name = "добавитьПапкуНаFlashDriveToolStripMenuItem";
+            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Text = "Добавить папку на FlashDrive";
+            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Click += new System.EventHandler(this.добавитьПапкуНаFlashDriveToolStripMenuItem_Click);
+            // 
             // tblog
             // 
-            this.tblog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.tblog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tblog.Location = new System.Drawing.Point(3, 207);
+            this.tblog.Location = new System.Drawing.Point(3, 155);
             this.tblog.Multiline = true;
             this.tblog.Name = "tblog";
             this.tblog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tblog.Size = new System.Drawing.Size(626, 151);
+            this.tblog.Size = new System.Drawing.Size(626, 203);
             this.tblog.TabIndex = 3;
             // 
             // progressBar1
@@ -158,14 +173,13 @@
             // 
             // listExceptions
             // 
-            this.listExceptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listExceptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listExceptions.ContextMenuStrip = this.contextExceptions;
             this.listExceptions.FormattingEnabled = true;
-            this.listExceptions.Location = new System.Drawing.Point(157, 132);
+            this.listExceptions.Location = new System.Drawing.Point(157, 88);
             this.listExceptions.Name = "listExceptions";
-            this.listExceptions.Size = new System.Drawing.Size(367, 69);
+            this.listExceptions.Size = new System.Drawing.Size(367, 56);
             this.listExceptions.TabIndex = 7;
             // 
             // contextExceptions
@@ -192,29 +206,14 @@
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(157, 117);
+            this.label1.Location = new System.Drawing.Point(157, 73);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Исключения:";
-            // 
-            // добавитьПапкуНаFlashDriveToolStripMenuItem
-            // 
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Name = "добавитьПапкуНаFlashDriveToolStripMenuItem";
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Text = "Добавить папку на FlashDrive";
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Click += new System.EventHandler(this.добавитьПапкуНаFlashDriveToolStripMenuItem_Click);
-            // 
-            // синхронизироватьToolStripMenuItem
-            // 
-            this.синхронизироватьToolStripMenuItem.Name = "синхронизироватьToolStripMenuItem";
-            this.синхронизироватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.синхронизироватьToolStripMenuItem.Text = "-=Синхронизировать=-";
-            this.синхронизироватьToolStripMenuItem.Click += new System.EventHandler(this.синхронизироватьToolStripMenuItem_Click);
             // 
             // Form1
             // 
