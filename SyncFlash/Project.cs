@@ -64,7 +64,7 @@ namespace SyncFlash
         /// </summary>
         /// <returns></returns>
         public XElement ToXElement()
-        {//TODO modify Exceptdir to XML
+        {
             var xel = new XElement(CONSTS.ProjXML);
             xel.SetAttributeValue("name", Name);
             
@@ -72,7 +72,7 @@ namespace SyncFlash
             {
                 XElement xdir = new XElement(CONSTS.DirXML);
                 xdir.SetAttributeValue(CONSTS.PC_XML, dir.PC_Name);//имя компа в атрибутах
-                xdir.SetAttributeValue(CONSTS.AttDirName, dir.Dir);//путь к папке в атрибутах
+                xdir.SetAttributeValue(CONSTS.AttDirName, dir._dir);//путь к папке в атрибутах
                 xel.Add(xdir);
             }
             //папки исключения
@@ -91,7 +91,7 @@ namespace SyncFlash
     /// </summary>
     class Projdir
     {
-        private string _dir;
+        public string _dir;
         private Project FromProject;
         private string pc_name;
         /// <summary>
@@ -110,8 +110,17 @@ namespace SyncFlash
         }
         public string Dir
         {
-            get { return _dir; }
-            set { _dir = value; }
+            get {
+                if (PC_Name == CONSTS.FlashDrive) //если флешка, то добавит букву диска
+                    return (CONSTS.GetDriveLetter() + _dir);
+                else return _dir;
+            }
+            set { if(CONSTS.FlashDrive==PC_Name)//если флешка
+                { var seg = value.Split('\\')[0];
+                    _dir = value.Substring(seg.Length);//сохраняем без буквы диска
+                }
+                    else _dir = value;
+            }
         }
         public bool IsOnline
         {

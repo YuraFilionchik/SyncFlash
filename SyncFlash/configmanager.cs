@@ -38,7 +38,27 @@ namespace SyncFlash
             if (bar.InvokeRequired) bar.Invoke(new Action<int>(s => bar.Value = s), value);
             else bar.Value = value;
         }
+        /// <summary>
+        /// Get NAme of Removable drive on computer
+        /// </summary>
+        /// <returns>"D:"</returns>
+        public static string GetDriveLetter()
+        {
+            string drive = "";
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+
+            foreach (DriveInfo d in allDrives)
+            {
+                if (d.IsReady == true && d.DriveType == DriveType.Removable && d.TotalSize > 1600000)
+                {
+                    drive = d.Name.TrimEnd('\\');
+                }
+
+            }
+            return drive;
+        }
     }
+   
     class configmanager
     {
         string Filepath; //Имя файла.
@@ -182,6 +202,17 @@ namespace SyncFlash
              SaveProject(p);
             }
         }
+        private Project ClearDublicates(Project   p)
+        {
+            for (int i = 0; i < p.AllProjectDirs.Count; i++)
+            {
+                var idir = p.AllProjectDirs[i];
+                if (p.AllProjectDirs.Count(x => x.Dir == idir.Dir) > 1)
+                    p.AllProjectDirs.Remove(idir);
+               
+            }
+            return p;
+        }
         public void SaveProject(Project project)
         {
             if (!File.Exists(Filepath))
@@ -190,6 +221,7 @@ namespace SyncFlash
                 if (doc.Elements(RootXMLProject).Count() == 0)
                     doc=new XDocument(new XElement(RootXMLProject));
             }
+            ClearDublicates(project);
             var xp = project.ToXElement();
             var projects = doc.Element(RootXMLProject).Elements();
             if (projects.Any(x => x.Attribute("name").Value == project.Name))

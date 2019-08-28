@@ -15,6 +15,7 @@ namespace SyncFlash
     public partial class Form1 : Form
     {
         configmanager cfg;
+        public string DriveLette;
         const string cfg_file = "conf.ini";
         string pc_name = Environment.MachineName;
         List<Project> Projects;
@@ -28,6 +29,7 @@ namespace SyncFlash
             {
                 List_Projects.Items.Add(p.ToString());
             }
+            DriveLette = CONSTS.GetDriveLetter();
             this.FormClosing += Form1_FormClosing;
             List_Projects.SelectedIndexChanged += List_Projects_SelectedIndexChanged;
             list_dirs.SelectedIndexChanged += List_dirs_SelectedIndexChanged;
@@ -241,34 +243,30 @@ namespace SyncFlash
                 SaveAllProjects();
             }
         }
-        //добавление папки на флешке
-        private void добавитьПапкуНаFlashDriveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Input input = new Input();
-            input.ShowDialog();
-            var selected = List_Projects.SelectedItem;
-            if (string.IsNullOrWhiteSpace(input.TEXT) ||
-                list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\'))) ||
-                selected == null) return;
-
-            if (!list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\')))) list_dirs.Items.Add(input.TEXT.TrimEnd('\\'));
-            var p=Projects.First(x => x.Name == selected.ToString());
-            p.AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\'),p,CONSTS.FlashDrive));
-            SaveAllProjects();
-        }
-
+        
         private void добавитьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Input input = new Input();
             input.ShowDialog();
             var selected = List_Projects.SelectedItem;
+            string inputDir = input.TEXT.TrimEnd('\\');
             if (string.IsNullOrWhiteSpace(input.TEXT) ||
-                list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\'))) ||
+                list_dirs.Items.Contains(new ListViewItem(inputDir)) ||
                 selected == null) return;
            
-            if(!list_dirs.Items.Contains(new ListViewItem(input.TEXT.TrimEnd('\\')))) list_dirs.Items.Add(input.TEXT.TrimEnd('\\'));
+            if(!list_dirs.Items.Contains(new ListViewItem(inputDir))) list_dirs.Items.Add(inputDir);
            var p= Projects.First(x => x.Name == selected.ToString());
-            p.AllProjectDirs.Add(new Projdir(input.TEXT.TrimEnd('\\'),p));
+            var lette = input.TEXT.Split('\\')[0];
+            if (lette == DriveLette)
+            {//removable disk
+                string dir = input.TEXT.TrimEnd('\\').Substring(lette.Length);
+                p.AllProjectDirs.Add(new Projdir(dir, p, CONSTS.FlashDrive));
+            }
+            else //HDD disk
+            {
+                p.AllProjectDirs.Add(new Projdir(inputDir, p));
+            }
+            
             SaveAllProjects();
         }
 
@@ -278,7 +276,12 @@ namespace SyncFlash
             if (selected == null) return;
             var selectedDir = list_dirs.SelectedItems;
             if (selectedDir.Count == 0) return;
-            Projects.First(x => x.Name == selected.ToString()).RemoveDir(selectedDir[0].Text);
+            string DirRemove = selectedDir[0].Text;
+            if (DriveLette == DirRemove.Split('\\')[0])//FlashDrive
+            {
+                DirRemove = GetRelationPath(DirRemove, DriveLette);
+            }
+                Projects.First(x => x.Name == selected.ToString()).RemoveDir(DirRemove);
             list_dirs.Items.Remove(selectedDir[0]);
             SaveAllProjects();
         }

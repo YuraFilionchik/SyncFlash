@@ -38,7 +38,6 @@
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tblog = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -110,31 +109,23 @@
             // 
             this.contextdirs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавитьПапкуToolStripMenuItem,
-            this.удалитьПапкуToolStripMenuItem,
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem});
+            this.удалитьПапкуToolStripMenuItem});
             this.contextdirs.Name = "contextdirs";
-            this.contextdirs.Size = new System.Drawing.Size(235, 70);
+            this.contextdirs.Size = new System.Drawing.Size(162, 48);
             // 
             // добавитьПапкуToolStripMenuItem
             // 
             this.добавитьПапкуToolStripMenuItem.Name = "добавитьПапкуToolStripMenuItem";
-            this.добавитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.добавитьПапкуToolStripMenuItem.Text = "Добавить папку ПК";
+            this.добавитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.добавитьПапкуToolStripMenuItem.Text = "Добавить папку";
             this.добавитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.добавитьПапкуToolStripMenuItem_Click);
             // 
             // удалитьПапкуToolStripMenuItem
             // 
             this.удалитьПапкуToolStripMenuItem.Name = "удалитьПапкуToolStripMenuItem";
-            this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.удалитьПапкуToolStripMenuItem.Text = "Удалить папку";
             this.удалитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.удалитьПапкуToolStripMenuItem_Click);
-            // 
-            // добавитьПапкуНаFlashDriveToolStripMenuItem
-            // 
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Name = "добавитьПапкуНаFlashDriveToolStripMenuItem";
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Text = "Добавить папку на FlashDrive";
-            this.добавитьПапкуНаFlashDriveToolStripMenuItem.Click += new System.EventHandler(this.добавитьПапкуНаFlashDriveToolStripMenuItem_Click);
             // 
             // tblog
             // 
@@ -256,7 +247,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         public System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.ToolStripMenuItem добавитьПапкуНаFlashDriveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem синхронизироватьToolStripMenuItem;
     }
 }
