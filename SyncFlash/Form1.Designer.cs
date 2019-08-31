@@ -46,6 +46,8 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
+            this.btSelectUSB = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -53,8 +55,6 @@
             // 
             // List_Projects
             // 
-            this.List_Projects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.List_Projects.ContextMenuStrip = this.contextprojects;
             this.List_Projects.FormattingEnabled = true;
             this.List_Projects.Location = new System.Drawing.Point(3, 2);
@@ -116,14 +116,14 @@
             // добавитьПапкуToolStripMenuItem
             // 
             this.добавитьПапкуToolStripMenuItem.Name = "добавитьПапкуToolStripMenuItem";
-            this.добавитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.добавитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.добавитьПапкуToolStripMenuItem.Text = "Добавить папку";
             this.добавитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.добавитьПапкуToolStripMenuItem_Click);
             // 
             // удалитьПапкуToolStripMenuItem
             // 
             this.удалитьПапкуToolStripMenuItem.Name = "удалитьПапкуToolStripMenuItem";
-            this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.удалитьПапкуToolStripMenuItem.Text = "Удалить папку";
             this.удалитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.удалитьПапкуToolStripMenuItem_Click);
             // 
@@ -206,11 +206,42 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Исключения:";
             // 
+            // btSelectUSB
+            // 
+            this.btSelectUSB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btSelectUSB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btSelectUSB.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSelectUSB.Location = new System.Drawing.Point(532, 26);
+            this.btSelectUSB.Name = "btSelectUSB";
+            this.btSelectUSB.Size = new System.Drawing.Size(102, 23);
+            this.btSelectUSB.TabIndex = 9;
+            this.btSelectUSB.Text = "Select USB drive...";
+            this.btSelectUSB.UseVisualStyleBackColor = true;
+            this.btSelectUSB.Click += new System.EventHandler(this.btSelectUSB_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Aqua;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.Blue;
+            this.button1.FlatAppearance.BorderSize = 4;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button1.Location = new System.Drawing.Point(532, 88);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(97, 56);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "StartSync";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 388);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btSelectUSB);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listExceptions);
             this.Controls.Add(this.checkBox1);
@@ -248,6 +279,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         public System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ToolStripMenuItem синхронизироватьToolStripMenuItem;
+        private System.Windows.Forms.Button btSelectUSB;
+        private System.Windows.Forms.Button button1;
     }
 }
 

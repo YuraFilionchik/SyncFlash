@@ -21,7 +21,7 @@ namespace SyncFlash
         List<Project> Projects;
         Thread SyncThread;
         public Form1()
-        {
+        { //TODO SYNC SOME PROJECTS 
             InitializeComponent();
             cfg = new configmanager(cfg_file);
             Projects = cfg.ReadAllProjects() ?? new List<Project>();
@@ -34,7 +34,7 @@ namespace SyncFlash
             List_Projects.SelectedIndexChanged += List_Projects_SelectedIndexChanged;
             list_dirs.SelectedIndexChanged += List_dirs_SelectedIndexChanged;
             checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
-            
+            CONSTS.invokeControlText(tblog,"USB-Flash: "+DriveLette);
         }
         
         //selected DIR
@@ -355,11 +355,38 @@ namespace SyncFlash
 
         private void синхронизироватьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SyncSelectedProjects();
+        }
+        /// <summary>
+        /// Запускает процесс синхронизации выделенных проектов
+        /// </summary>
+        private void SyncSelectedProjects()
+        {
             var selected = List_Projects.SelectedItem;
             if (selected == null) return;
             var P = Projects.First(x => x.Name == selected.ToString());
             tblog.Clear();
             StartSync(P);
+        }
+        //TODO сделать переименование проекта
+        //TODO Menu/edit dirs
+        //TODO ABORT SYNC
+        //TODO display filesize in tblog
+        private void btSelectUSB_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fd=new FolderBrowserDialog();
+            fd.Description = "Выберите любую папку на USB/Select any folder on USB.";
+            var dr = fd.ShowDialog();
+            if(dr!=DialogResult.OK) return;
+            if(!Directory.Exists(fd.SelectedPath)) return;
+            string newLette = fd.SelectedPath.Split('\\').First();
+            DriveLette = newLette;
+            CONSTS.invokeControlText(tblog,"New USB letter: "+DriveLette);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            SyncSelectedProjects();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace SyncFlash
         public const string ExceptXML = "ExceptionDir";
         public const string FlashDrive = "FLASHDRIVE";
 
-        public static void invokeControlText(Control control, string text)
+        public static void invokeControlText(TextBox control, string text)
         {
             if (text == null)
             {
@@ -27,8 +27,8 @@ namespace SyncFlash
             }
             else
             {
-                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.Text += s), text+Environment.NewLine);
-                else control.Text += text+Environment.NewLine;
+                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), text+Environment.NewLine);
+                else control.AppendText(text + Environment.NewLine); 
             }
 
         }

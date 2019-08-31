@@ -39,7 +39,7 @@ namespace SyncFlash
         {
             var dr = folderBrowserDialog1.ShowDialog();
             if (dr == DialogResult.OK) TEXT = folderBrowserDialog1.SelectedPath;
-                
+            textBox1.Focus();
         }
     }
 }
