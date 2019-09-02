@@ -20,7 +20,7 @@ namespace SyncFlash
         public const string FlashDrive = "FLASHDRIVE";
         public  const string btSyncText1="StartSync";
         public const string btSyncText2 = "StopSync";
-        public static void invokeControlTextNewLine(TextBox control, string text)
+        public static void AddNewLine(DataGridView control, string text)
         {
             if (text == null)
             {
@@ -28,45 +28,45 @@ namespace SyncFlash
             }
             else
             {
-                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), text+Environment.NewLine);
-                else control.AppendText(text + Environment.NewLine); 
-            }
-
-        }
-        public static void invokeAddTempLine(TextBox control, string text)
-        {
-            if (text == null)
-            {
-
-            }
-            else
-            {
-                var size = control.Lines.Length;
-                var lastLine = control.Lines[size-1];
-                if (lastLine.Contains(("Skipped")))//Already exist
-                {
-                    if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.Lines[size - 1] = s), "Skipped:\t" + text);
-                    else lastLine = "Skipped:\t" + text;
-                }else {//first temp line
-                    if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), "Skipped:\t" + text);
-                    else control.AppendText("Skipped:\t" + text);
+                int last = control.Rows.Count - 1;
+                var value = last>=0?control.Rows[last].Cells["data"].Value:null;
+                if (last>=0 && value!=null && value.ToString().Contains("Skipped"))
+                {//уже есть временная строка
+                    control.Invoke(new MethodInvoker(delegate()
+                    {
+                        
+                    }));
+                    if (control.InvokeRequired)
+                        control.Invoke(new MethodInvoker(delegate()
+                            { control.Rows[last].Cells["data"].Value = text; }));
+                    else control.Rows[last].Cells["data"].Value = text;
                 }
-                    
+                else//создаем новую строку
+                {
+                    int lastrow = 0;
+                    if (control.InvokeRequired)
+                        control.Invoke(new MethodInvoker(delegate() { lastrow = control.Rows.Add(); }));
+                    else lastrow=control.Rows.Add();
+                if (control.InvokeRequired)
+                    control.Invoke(new MethodInvoker(delegate (){ control.Rows[lastrow].Cells["data"].Value = text; }));
+                else control.Rows[lastrow].Cells["data"].Value=text;
+                }
+
+                int offset = 10;
+                if (control.RowCount > offset)
+                {
+                if( control.InvokeRequired)
+                    control.Invoke(new MethodInvoker(delegate ()
+                        { control.FirstDisplayedScrollingRowIndex = control.RowCount - offset; }));
+                else
+                   control.FirstDisplayedScrollingRowIndex=control.RowCount-offset;
+                }
+                   
             }
 
         }
-        private static void invokeDeleteTempLine(TextBox control)
-        {
-            var size = control.Lines.Length;
-            var lastLine = control.Lines[size - 1];
-            if (lastLine.Contains(("Skipped")))
-            {
-                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.Lines[size-1]=s),"");
-                else control.Lines[size - 1] ="";
-            }
-
-        }
-        public static void invokeControlText(TextBox control, string text)
+       
+        public static void AddToLastLine(DataGridView control, string text)
         {
             if (text == null)
             {
@@ -74,12 +74,43 @@ namespace SyncFlash
             }
             else
             {
-                invokeDeleteTempLine(control);
-                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), text );
-                else control.AppendText(text);
+
+                if (control.InvokeRequired)
+                    control.Invoke(new MethodInvoker(delegate ()
+                        { control.Rows[control.Rows.Count - 1].Cells["data"].Value += text; }));
+                else control.Rows[control.Rows.Count - 1].Cells["data"].Value += text;
             }
 
         }
+        public static void AddToTempLine(DataGridView control, string text)
+        {
+            if (text == null)
+            {
+
+            }
+            else
+            {
+                int last = control.Rows.Count-1;
+                var value = last >= 0 ? control.Rows[last].Cells["data"].Value : null;
+                if (last>=0 && value!=null && value.ToString().Contains("Skipped"))
+                {//already exist
+                    if (control.InvokeRequired)
+                        control.Invoke(new MethodInvoker(delegate()
+                        {
+                            control.Rows[last].Cells["data"].Value = "Skipped:\t" + text;
+                        }));
+                    else control.Rows[last].Cells["data"].Value = "Skipped:\t" + text;
+                }
+                else
+                {//add new templine
+                    AddNewLine(control,"Skipped:\t"+text);
+                }
+                
+
+            }
+
+        }
+       
         public static void EnableButton(Button bt)
         {
             

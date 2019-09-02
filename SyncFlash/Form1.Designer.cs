@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.List_Projects = new System.Windows.Forms.ListBox();
             this.contextprojects = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,7 +40,6 @@
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tblog = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.listExceptions = new System.Windows.Forms.ListBox();
@@ -48,9 +49,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btSelectUSB = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.tblog = new System.Windows.Forms.DataGridView();
+            this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tblog)).BeginInit();
             this.SuspendLayout();
             // 
             // List_Projects
@@ -126,18 +130,6 @@
             this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.удалитьПапкуToolStripMenuItem.Text = "Удалить папку";
             this.удалитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.удалитьПапкуToolStripMenuItem_Click);
-            // 
-            // tblog
-            // 
-            this.tblog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tblog.Location = new System.Drawing.Point(3, 155);
-            this.tblog.Multiline = true;
-            this.tblog.Name = "tblog";
-            this.tblog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tblog.Size = new System.Drawing.Size(626, 203);
-            this.tblog.TabIndex = 3;
             // 
             // progressBar1
             // 
@@ -235,18 +227,69 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // tblog
+            // 
+            this.tblog.AllowUserToAddRows = false;
+            this.tblog.AllowUserToDeleteRows = false;
+            this.tblog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tblog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.tblog.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.tblog.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.tblog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tblog.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.tblog.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.tblog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.tblog.ColumnHeadersVisible = false;
+            this.tblog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.data});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.tblog.DefaultCellStyle = dataGridViewCellStyle1;
+            this.tblog.EnableHeadersVisualStyles = false;
+            this.tblog.Location = new System.Drawing.Point(3, 156);
+            this.tblog.Name = "tblog";
+            this.tblog.ReadOnly = true;
+            this.tblog.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.tblog.RowHeadersVisible = false;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Navy;
+            this.tblog.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.tblog.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.SystemColors.Control;
+            this.tblog.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tblog.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Navy;
+            this.tblog.RowTemplate.Height = 10;
+            this.tblog.RowTemplate.ReadOnly = true;
+            this.tblog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.tblog.Size = new System.Drawing.Size(626, 203);
+            this.tblog.TabIndex = 11;
+            // 
+            // data
+            // 
+            this.data.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.data.HeaderText = "data";
+            this.data.Name = "data";
+            this.data.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 388);
+            this.Controls.Add(this.tblog);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btSelectUSB);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listExceptions);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.tblog);
             this.Controls.Add(this.list_dirs);
             this.Controls.Add(this.List_Projects);
             this.Name = "Form1";
@@ -255,6 +298,7 @@
             this.contextprojects.ResumeLayout(false);
             this.contextdirs.ResumeLayout(false);
             this.contextExceptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tblog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,7 +308,6 @@
 
         private System.Windows.Forms.ListBox List_Projects;
         private System.Windows.Forms.ListView list_dirs;
-        private System.Windows.Forms.TextBox tblog;
         private System.Windows.Forms.ContextMenuStrip contextprojects;
         private System.Windows.Forms.ToolStripMenuItem добавитьПроектToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem удалитьПроектToolStripMenuItem;
@@ -281,6 +324,8 @@
         private System.Windows.Forms.ToolStripMenuItem синхронизироватьToolStripMenuItem;
         private System.Windows.Forms.Button btSelectUSB;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridView tblog;
+        private System.Windows.Forms.DataGridViewTextBoxColumn data;
     }
 }
 

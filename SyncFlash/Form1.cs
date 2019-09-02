@@ -35,8 +35,8 @@ namespace SyncFlash
             List_Projects.SelectedIndexChanged += List_Projects_SelectedIndexChanged;
             list_dirs.SelectedIndexChanged += List_dirs_SelectedIndexChanged;
             checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
-            CONSTS.invokeControlTextNewLine(tblog,"USB-Flash: "+DriveLette);
-            tblog.Lines[0] = "aaaaa";
+            CONSTS.AddNewLine(tblog,"USB-Flash: "+DriveLette);
+            
         }
         
         //selected DIR
@@ -101,7 +101,7 @@ namespace SyncFlash
                         {
                             foreach (var t in OnlineDirs.First().Info2())
                             {
-                                CONSTS.invokeControlTextNewLine(tblog, t);
+                                CONSTS.AddNewLine(tblog, t);
                             }
 
                             return;
@@ -134,13 +134,13 @@ namespace SyncFlash
                             }
 
                             string DirsToString = "";
-                            CONSTS.invokeControlTextNewLine(tblog,
+                            CONSTS.AddNewLine(tblog,
                                 "From \t" + sourceDir.LastMod.ToString("dd.MM.yyyy hh:mm:ss") + "<=>" + sourceDir.Dir +
                                 " \t\t{" + sourceDir.PC_Name + "}");
                             foreach (var d in DestDirs)
                             {
                                 DirsToString += d.Dir + "; ";
-                                CONSTS.invokeControlTextNewLine(tblog,
+                                CONSTS.AddNewLine(tblog,
                                     "To \t" + d.LastMod.ToString("dd.MM.yyyy hh:mm:ss") + "<=>" + d.Dir + " \t\t{" +
                                     d.PC_Name + "}");
                             }
@@ -150,7 +150,7 @@ namespace SyncFlash
                                 DirsToString,
                                 project.Name, MessageBoxButtons.YesNo);
                             if (dr == DialogResult.No) return;
-                            CONSTS.invokeControlTextNewLine(tblog, "--------------------------------");
+                            CONSTS.AddNewLine(tblog, "--------------------------------------------");
                             foreach (var destdir in DestDirs) //перебор папок назначения
                             {
                                 if (!Directory.Exists(destdir.Dir)) Directory.CreateDirectory(destdir.Dir);
@@ -177,16 +177,16 @@ namespace SyncFlash
                                                 //update file
                                                 upd++;
                                                 var size = new FileInfo(file.Key).Length;
-                                                CONSTS.invokeControlText(tblog,
+                                                CONSTS.AddNewLine(tblog,
                                                     "upd:> " + upd.ToString() + "). " + relfile);
                                                 File.Copy(file.Key, dfile.Key, true);
-                                                CONSTS.invokeControlTextNewLine(tblog,
+                                                CONSTS.AddToLastLine(tblog,
                                                     "\t(" + ((double) size / 1000) + "kbit)");
                                             }
                                             catch (Exception ex)
                                             {
                                                 errorCopy++;
-                                                CONSTS.invokeControlTextNewLine(tblog,
+                                                CONSTS.AddNewLine(tblog,
                                                     "err:>\t" + relfile + "\t" + ex.Message);
                                             }
 
@@ -194,7 +194,7 @@ namespace SyncFlash
                                         }
                                         else
                                         {
-                                          //TODO  CONSTS.invokeAddTempLine(tblog, relfile);
+                                           CONSTS.AddToTempLine(tblog, relfile);
                                         }
 
                                         CONSTS.invokeProgress(progressBar1, (int) (count * 100 / cAllSource));
@@ -210,16 +210,16 @@ namespace SyncFlash
                                         {
                                             nfile++;
                                             var size = new FileInfo(file.Key).Length;
-                                            CONSTS.invokeControlText(tblog,
+                                            CONSTS.AddNewLine(tblog,
                                                 "new:>" + nfile.ToString() + "). " + relfile);
                                             File.Copy(file.Key, newfile, true);
-                                            CONSTS.invokeControlTextNewLine(tblog,
+                                            CONSTS.AddToLastLine(tblog,
                                                 "\t(" + ((double) size / 1000) + "kbit)");
                                         }
                                         catch (Exception ex)
                                         {
                                             errorCopy++;
-                                            CONSTS.invokeControlTextNewLine(tblog,
+                                            CONSTS.AddNewLine(tblog,
                                                 "err:>\t" + relfile + "\t" + ex.Message);
                                         }
 
@@ -230,12 +230,12 @@ namespace SyncFlash
 
                             }
 
-                            CONSTS.invokeControlTextNewLine(tblog, "--------------------------------");
-                            CONSTS.invokeControlTextNewLine(tblog, project.Name + " синхронизирован.");
-                            CONSTS.invokeControlTextNewLine(tblog, "Новых файлов: \t" + newfiles.ToString());
-                            CONSTS.invokeControlTextNewLine(tblog, "Обновлено файлов:\t" + updatedfiles.ToString());
-                            CONSTS.invokeControlTextNewLine(tblog, "Всего файлов:\t" + cTotal.ToString());
-                            CONSTS.invokeControlTextNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
+                            CONSTS.AddNewLine(tblog, "--------------------------------");
+                            CONSTS.AddNewLine(tblog, project.Name + " синхронизирован.");
+                            CONSTS.AddNewLine(tblog, "Новых файлов: \t" + newfiles.ToString());
+                            CONSTS.AddNewLine(tblog, "Обновлено файлов:\t" + updatedfiles.ToString());
+                            CONSTS.AddNewLine(tblog, "Всего файлов:\t" + cTotal.ToString());
+                            CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
                         }
 
@@ -412,7 +412,7 @@ namespace SyncFlash
             var selected = List_Projects.SelectedItem;
             if (selected == null) return;
             var P = Projects.First(x => x.Name == selected.ToString());
-            tblog.Clear();
+            tblog.Rows.Clear();
             StartSync(P);
         }
 
@@ -428,7 +428,7 @@ namespace SyncFlash
             var selected = List_Projects.SelectedItem;
             if (selected == null) return;
             var P = Projects.First(x => x.Name == selected.ToString());
-            tblog.Clear();
+            tblog.Rows.Clear();
             StartSync(P);
         }
         //TODO сделать переименование проекта
@@ -442,7 +442,7 @@ namespace SyncFlash
             if(!Directory.Exists(fd.SelectedPath)) return;
             string newLette = fd.SelectedPath.Split('\\').First();
             DriveLette = newLette;
-            CONSTS.invokeControlTextNewLine(tblog,"New USB letter: "+DriveLette);
+            CONSTS.AddNewLine(tblog,"New USB letter: "+DriveLette);
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -451,7 +451,7 @@ namespace SyncFlash
             {
                 SyncThread.Abort();
                 CONSTS.EnableButton(button1);
-                CONSTS.invokeControlTextNewLine(tblog,"Прервано пользователем");
+                CONSTS.AddNewLine(tblog,"Прервано пользователем");
                 return;
             }
             SyncSelectedProjects();
