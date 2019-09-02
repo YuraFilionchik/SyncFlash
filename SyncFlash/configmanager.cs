@@ -18,8 +18,9 @@ namespace SyncFlash
         public const string PC_XML = "NetBios";
         public const string ExceptXML = "ExceptionDir";
         public const string FlashDrive = "FLASHDRIVE";
-
-        public static void invokeControlText(TextBox control, string text)
+        public  const string btSyncText1="StartSync";
+        public const string btSyncText2 = "StopSync";
+        public static void invokeControlTextNewLine(TextBox control, string text)
         {
             if (text == null)
             {
@@ -32,12 +33,84 @@ namespace SyncFlash
             }
 
         }
+        public static void invokeAddTempLine(TextBox control, string text)
+        {
+            if (text == null)
+            {
+
+            }
+            else
+            {
+                var size = control.Lines.Length;
+                var lastLine = control.Lines[size-1];
+                if (lastLine.Contains(("Skipped")))//Already exist
+                {
+                    if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.Lines[size - 1] = s), "Skipped:\t" + text);
+                    else lastLine = "Skipped:\t" + text;
+                }else {//first temp line
+                    if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), "Skipped:\t" + text);
+                    else control.AppendText("Skipped:\t" + text);
+                }
+                    
+            }
+
+        }
+        private static void invokeDeleteTempLine(TextBox control)
+        {
+            var size = control.Lines.Length;
+            var lastLine = control.Lines[size - 1];
+            if (lastLine.Contains(("Skipped")))
+            {
+                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.Lines[size-1]=s),"");
+                else control.Lines[size - 1] ="";
+            }
+
+        }
+        public static void invokeControlText(TextBox control, string text)
+        {
+            if (text == null)
+            {
+
+            }
+            else
+            {
+                invokeDeleteTempLine(control);
+                if (control.InvokeRequired) control.Invoke(new Action<string>(s => control.AppendText(s)), text );
+                else control.AppendText(text);
+            }
+
+        }
+        public static void EnableButton(Button bt)
+        {
+            
+                if (bt.InvokeRequired) bt.Invoke(new Action<string>(s => bt.Text=(s)), CONSTS.btSyncText1);
+                else bt.Text=CONSTS.btSyncText1;
+           // invokeEnableControl(bt,true);
+            
+
+        }
+        public static void DisableButton(Button bt)
+        {
+
+            if (bt.InvokeRequired) bt.Invoke(new Action<string>(s => bt.Text = (s)), CONSTS.btSyncText2);
+            else bt.Text = CONSTS.btSyncText2;
+           // invokeEnableControl(bt, false);
+
+
+        }
         public static void invokeProgress(ProgressBar bar, int value)
         {
             if (value > 100) return;
             if (bar.InvokeRequired) bar.Invoke(new Action<int>(s => bar.Value = s), value);
             else bar.Value = value;
         }
+
+        public static void invokeEnableControl(Control control, bool enabled)
+        {
+            if (control.InvokeRequired) control.Invoke(new Action<bool>(s => control.Enabled=s), enabled);
+            else control.Enabled=enabled;
+        }
+
         /// <summary>
         /// Get NAme of Removable drive on computer
         /// </summary>
