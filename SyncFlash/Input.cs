@@ -41,5 +41,12 @@ namespace SyncFlash
             if (dr == DialogResult.OK) TEXT = folderBrowserDialog1.SelectedPath;
             textBox1.Focus();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            text = textBox1.Text;
+            Close();
+        }
     }
 }

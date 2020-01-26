@@ -49,9 +49,12 @@ namespace SyncFlash
 
         public void RemoveDir(string dir)
         {
-            if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(AllProjectDirs.First(c=>c.Dir==dir));
+            if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(GetProjDirFromString(dir));
         }
-        
+        private Projdir GetProjDirFromString(string dir)
+        {
+            return AllProjectDirs.First(x => x.Dir == dir);
+        }
         /// <summary>
         /// <Project name = Name>
         ///     <directory> dirpath</directory>
@@ -154,6 +157,7 @@ namespace SyncFlash
                 //        var files2 = Directory.GetFiles(subdir);
                 //        if (files2.Length != 0) files1.AddRange(files2);
                 //    }
+                //чтение всех файлов проекта, кроме исключений
                 filesdates res = new filesdates();
                 var AllFiles = GetfilesIndir(Dir);
                 foreach (var file in AllFiles)
@@ -165,21 +169,21 @@ namespace SyncFlash
         }
         private string[] GetfilesIndir(string dir)
         {
-            string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;
-            var res = new string[0];
-            if (!Directory.Exists(dir) || FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
-                return res;
-            if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);
+            string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;//относительный путь
+            var result = new string[0];
+            if ( FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
+                return result;
+            if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);//file in root dir
 
             else
             {
-                res = res.Concat(Directory.GetFiles(dir)).ToArray();
+                result = result.Concat(Directory.GetFiles(dir)).ToArray();
                 foreach (var D in Directory.GetDirectories(dir))
                 {
-                    res = res.Concat(GetfilesIndir(D)).ToArray();
+                    result = result.Concat(GetfilesIndir(D)).ToArray();
                 }
             }
-            return res;
+            return result;
         }
         /// <summary>
         /// Показывает время подификации самого нового файла в папке Dir и одной подпапке внутрь
@@ -212,9 +216,9 @@ namespace SyncFlash
             var all = AllFiles();
             foreach (var filedate in all)
             {
-                var n0 = all.Count(x=>files2.Any(c=>c.Key==x.Key && c.Value<x.Value));
+                var n0 = all.Count(x => files2.Any(c => c.Key == x.Key && c.Value < x.Value));
                 var n1 = all.Count(x => files2.Any(c => c.Key == x.Key && c.Value > x.Value));
-                var n2 = all.Count(x =>!files2.Any(c=>c.Key==x.Key));
+                var n2 = all.Count(x => !files2.Any(c => c.Key == x.Key));
                 var n3 = files2.Count(x => !all.Any(c => c.Key == x.Key));
             }
 
@@ -235,7 +239,7 @@ namespace SyncFlash
             
             if (IsOnline) res.Add("ONLINE == " + Dir); else res.Add("OFFLINE == " + Dir);
             if (LastMod == DefaultDate) res.Add("Dir Last Modif.: недоступно");
-            else res.Add("Dir Last Modif.: "+LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
+            else res.Add("Самый свежий файл: "+LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
             res.Add("Файлов \t:" + AllFiles().Count);
             return res;
         }
@@ -250,4 +254,19 @@ namespace SyncFlash
             return res;
         }
     }
+
+    //class Queue
+    //{
+    //    Dictionary<string, string> Files;
+    //    public Queue()
+    //    {
+    //        Files = new Dictionary<string, string>();
+    //    }
+
+    //    public void AddFile(string SourceFilePath, string DestFilePath)
+    //    {
+    //        Files.Add(SourceFilePath, DestFilePath);
+    //    }
+        
+    //}
 }
