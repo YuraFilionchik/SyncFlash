@@ -36,6 +36,7 @@
             this.добавитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.синхронизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переименоватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.list_dirs = new System.Windows.Forms.ListView();
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +52,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tblog = new System.Windows.Forms.DataGridView();
             this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -71,9 +73,10 @@
             this.contextprojects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавитьПроектToolStripMenuItem,
             this.удалитьПроектToolStripMenuItem,
-            this.синхронизироватьToolStripMenuItem});
+            this.синхронизироватьToolStripMenuItem,
+            this.переименоватьToolStripMenuItem});
             this.contextprojects.Name = "contextprojects";
-            this.contextprojects.Size = new System.Drawing.Size(216, 70);
+            this.contextprojects.Size = new System.Drawing.Size(216, 92);
             // 
             // добавитьПроектToolStripMenuItem
             // 
@@ -95,6 +98,13 @@
             this.синхронизироватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.синхронизироватьToolStripMenuItem.Text = "-=Синхронизировать=-";
             this.синхронизироватьToolStripMenuItem.Click += new System.EventHandler(this.синхронизироватьToolStripMenuItem_Click);
+            // 
+            // переименоватьToolStripMenuItem
+            // 
+            this.переименоватьToolStripMenuItem.Name = "переименоватьToolStripMenuItem";
+            this.переименоватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.переименоватьToolStripMenuItem.Text = "Переименовать...";
+            this.переименоватьToolStripMenuItem.Click += new System.EventHandler(this.переименоватьToolStripMenuItem_Click);
             // 
             // list_dirs
             // 
@@ -203,7 +213,7 @@
             this.btSelectUSB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSelectUSB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btSelectUSB.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btSelectUSB.Location = new System.Drawing.Point(532, 26);
+            this.btSelectUSB.Location = new System.Drawing.Point(532, 59);
             this.btSelectUSB.Name = "btSelectUSB";
             this.btSelectUSB.Size = new System.Drawing.Size(102, 23);
             this.btSelectUSB.TabIndex = 9;
@@ -278,11 +288,23 @@
             this.data.Name = "data";
             this.data.ReadOnly = true;
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(531, 26);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(72, 17);
+            this.checkBox2.TabIndex = 12;
+            this.checkBox2.Text = "AutoSync";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 388);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.tblog);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btSelectUSB);
@@ -326,6 +348,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView tblog;
         private System.Windows.Forms.DataGridViewTextBoxColumn data;
+        private System.Windows.Forms.ToolStripMenuItem переименоватьToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 

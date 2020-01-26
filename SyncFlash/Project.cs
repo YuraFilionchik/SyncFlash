@@ -32,9 +32,8 @@ namespace SyncFlash
                 return list;
             }
         }
-        
-       
-        
+
+        public bool AutoSync;
         public string Name;
         public override string ToString()
         {
@@ -45,16 +44,14 @@ namespace SyncFlash
             this.Name = name;
             AllProjectDirs = new List<Projdir>();
             ExceptionDirs = new List<string>();
+            AutoSync = false;
         }
 
         public void RemoveDir(string dir)
         {
             if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(AllProjectDirs.First(c=>c.Dir==dir));
         }
-        public void StartSync()
-        {
-
-        }
+        
         /// <summary>
         /// <Project name = Name>
         ///     <directory> dirpath</directory>
@@ -67,7 +64,7 @@ namespace SyncFlash
         {
             var xel = new XElement(CONSTS.ProjXML);
             xel.SetAttributeValue("name", Name);
-            
+            xel.SetAttributeValue(CONSTS.AutoSync, this.AutoSync.ToString());
             foreach (var dir in AllProjectDirs)
             {
                 XElement xdir = new XElement(CONSTS.DirXML);

@@ -14,6 +14,7 @@ namespace SyncFlash
         public const string RootXMLProject = "Projects";
         public const string ProjXML = "Project";
         public const string DirXML = "directory";
+        public const string AutoSync = "Autosync";
         public const string AttDirName = "path";
         public const string PC_XML = "NetBios";
         public const string ExceptXML = "ExceptionDir";
@@ -270,13 +271,16 @@ namespace SyncFlash
                 var projs = from pr in doc.Descendants(ProjXML)
                             select new
                             {
-                                NAME = pr.Attribute("name").Value,
+                                NAME = pr.Attribute("name")?.Value,
+                                AutoSync=pr.Attribute(CONSTS.AutoSync)?.Value,
                                 Dirs = pr.Descendants(DirXML),
                                 ExcDirs = pr.Descendants(CONSTS.ExceptXML)
                             };
                 foreach (var project in projs) //read each project
                 {
                     var p = new Project(project.NAME);
+                    if (project.AutoSync != null) p.AutoSync = Boolean.Parse(project.AutoSync);
+                    else p.AutoSync = false;
                     foreach (var e in project.ExcDirs)
                     {//Adding exceptions Dirs
                         string exDir = e.Attribute(CONSTS.AttDirName).Value.ToString(); //Exception DIR path from XML file
