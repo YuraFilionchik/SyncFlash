@@ -23,6 +23,7 @@ namespace SyncFlash
         Thread SyncThread; 
         public Form1()
         { //TODO SYNC SOME PROJECTS 
+            //new
             InitializeComponent();
             cfg = new configmanager(cfg_file);
             Projects = cfg.ReadAllProjects() ?? new List<Project>();
