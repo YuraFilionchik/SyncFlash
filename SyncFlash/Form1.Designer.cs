@@ -111,6 +111,7 @@
             this.list_dirs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.list_dirs.ContextMenuStrip = this.contextdirs;
+            this.list_dirs.HideSelection = false;
             this.list_dirs.Location = new System.Drawing.Point(157, 2);
             this.list_dirs.MultiSelect = false;
             this.list_dirs.Name = "list_dirs";
@@ -290,6 +291,7 @@
             // 
             // checkBox2
             // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox2.AutoSize = true;
             this.checkBox2.Location = new System.Drawing.Point(531, 26);
             this.checkBox2.Name = "checkBox2";

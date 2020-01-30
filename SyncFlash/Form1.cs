@@ -168,24 +168,31 @@ namespace SyncFlash
                             int filesCount = 0; //count of files in dir
                             int cTotal = 0;
                             Dictionary<string, List<string>> Queue = new Dictionary<string, List<string>>();//очередь файлов источника и назначений
-                            //ищем папки с максимальной датой изменения файлов
-                            //нет, нужно копировать каждый файл независимо от проекта
+                            //перебор всех Онлайн директорий
                             foreach (var Dir in OnlineDirs) //for each Dir 
                             {//for each file take path and copmaire with other files in Onlinedirs
                                 foreach (var dateFile in Dir.AllFiles())
-                                { var newest = dateFile;
+                                { //проверяем, не проверялся ли такой файл при обходе другой директории
+                                    string relatePath = GetRelationPath(dateFile.Key, Dir.Dir);
+                                    if (Queue.Keys.Any(x=>x.Contains(relatePath))) continue; //dataFile.Key - Full filePath
+                                    var newest = dateFile; //самый свежий файл
                                     Dictionary<string, DateTime> otherFiles = new Dictionary<string, DateTime>();
-                                    foreach (var otherDir in OnlineDirs)
+                                    foreach (var otherDir in OnlineDirs) //Поиск текущего файла dateFile в остальных директориях
                                     {
                                         if (otherDir == Dir) continue; //пропуск текущей директории
-                                        var file = otherDir.AllFiles().FirstOrDefault(x => x.Key == dateFile.Key);//поиск такого же файла
-                                        if (String.IsNullOrEmpty(file.Key)) //создадим путь для копирования
+                                        //TODO не работает следующая строка
+                                        var file = otherDir.AllFiles().FirstOrDefault(x => GetRelationPath(x.Key,Dir.Dir) == relatePath);//поиск такого же файла
+                                        //если такого файла в Директории нет
+                                        if (String.IsNullOrEmpty(file.Key)) //создадим путь для копирования в эту директорию
                                         {
+                                            //пара значений (Путь файла, Время последнего изменения)
                                             file = new KeyValuePair<string, DateTime>
                                             (newest.Key.Replace(Dir.Dir, otherDir.Dir), newest.Value);
+                                            otherFiles.Add(file.Key, file.Value);//добавление в список
+                                            continue;
                                         }
                                         if (newest.Value > file.Value)
-                                            otherFiles.Add(file.Key, file.Value);//добавление в список
+                                            otherFiles.Add(file.Key, file.Value);//добавление файла в список файлов
                                         else if (newest.Value == file.Value)
                                         {
                                             continue; //SKIP  SAME FILES, DONT COPY!!!
@@ -196,124 +203,104 @@ namespace SyncFlash
                                                 otherFiles.Add(newest.Key, newest.Value);
                                             newest = file;
                                         }
-                                    }
-                                    //теперь выбираем самый свежий и добавляем в очередь
+                                    }//нашли самый новый файл dateFile среди остальных директорий
+                                    //теперь добавляем в очередь
                                     Queue.Add(newest.Key, otherFiles.Keys.ToList());
                                 }
-                            }
-                            if(false)
+                            }//проверили все файлы и добавили их в очередь
+                            //проверяем есть ли что копировать
+                            if (Queue.Count==0)
                             {
-                                //MessageBox.Show("Все папки одинаковые, нечего синхронизировать");
+                               if(!silentMode) MessageBox.Show("Все папки одинаковые, нечего синхронизировать");
                                 CONSTS.AddNewLine(tblog,project.Name+": Нечего синхронизировать.");
                                 SetSyncStatus(false);
                                 return;
                             }
 
-                          //CONSTS.AddNewLine(tblog,
-                          //      "From \t" + sourceDir.LastMod.ToString("dd.MM.yyyy hh:mm:ss") + "<=>" + sourceDir.Dir +
-                          //      " \t\t{" + sourceDir.PC_Name + "}");
-                          //  foreach (var d in DestDirs)
-                          //  {
-                          //      DirsToString += d.Dir + "; ";
-                          //      CONSTS.AddNewLine(tblog,
-                          //          "To \t" + d.LastMod.ToString("dd.MM.yyyy hh:mm:ss") + "<=>" + d.Dir + " \t\t{" +
-                          //          d.PC_Name + "}");
-                          //  }
 
                             if (!silentMode)// not silent
                             {
-                                //var dr = MessageBox.Show(
-                                //"Будут скопированы обновленные и новые файлы из " + sourceDir.Dir + "\r\n в \r\n" +
-                                //DirsToString,
-                                //project.Name, MessageBoxButtons.YesNo);
-                            //if (dr == DialogResult.No) {SetSyncStatus(false);return;}
+                                string msg = "Будут скопированы следующие файлы:\r\n";
+                                foreach (var file in Queue)
+                                {
+                                    msg += file.Key + "\r\n";
+                                }
+                                var dr = MessageBox.Show(msg, project.Name, MessageBoxButtons.YesNo);
+                            if (dr == DialogResult.No) {SetSyncStatus(false);return;}
                             }
                            
                             CONSTS.AddNewLine(tblog, "--------------------------------------------");
-                            //foreach (var destdir in DestDirs) //перебор папок назначения
-                            //{
-                            //    if (!Directory.Exists(destdir.Dir)) Directory.CreateDirectory(destdir.Dir);
-                            //    Dictionary<string, DateTime> AllSourceFiles = sourceDir.AllFiles();
-                            //    Dictionary<string, DateTime> AllDestFiles = destdir.AllFiles();
-                            //    int cAllSource = AllSourceFiles.Count;
-                            //    cTotal += AllSourceFiles.Count;
-                            //    filesCount = 0;
-                            //    int upd = 0;
-                            //    int nfile = 0;
-                            //    foreach (var file in AllSourceFiles) //процесс копирования
-                            //    {
-                            //        filesCount++;
-                            //        var relfile = GetRelationPath(file.Key, sourceDir.Dir);
-                            //        if (AllDestFiles.Any(x => GetRelationPath(x.Key, destdir.Dir) == relfile)
-                            //        ) //file exist
-                            //        {
-                            //            var dfile = AllDestFiles.First(x =>
-                            //                GetRelationPath(x.Key, destdir.Dir) == relfile);
-                            //            if (dfile.Value < file.Value) //файл назначения старше исходника
-                            //            {
-                            //                try
-                            //                {
-                            //                    //update file
-                            //                    upd++;
-                            //                    var size = new FileInfo(file.Key).Length;
-                            //                    CONSTS.AddNewLine(tblog,
-                            //                        "upd:> " + upd.ToString() + "). " + relfile);
-                            //                    File.Copy(file.Key, dfile.Key, true);
-                            //                    CONSTS.AddToLastLine(tblog,
-                            //                        "\t(" + ((double) size / 1000) + "kbit)");
-                            //                }
-                            //                catch (Exception ex)
-                            //                {
-                            //                    errorCopy++;
-                            //                    CONSTS.AddNewLine(tblog,
-                            //                        "err:>\t" + relfile + "\t" + ex.Message);
-                            //                }
+                            cTotal = Queue.Count(); //count of SrcFiles
+                            filesCount = 0; //total copied DestFiles 
+                            int nUpd = 0;//count of updated files
+                            int nNew = 0; //count of new files
+                            foreach (var File in Queue) //перебор файлов, которые надо копировать                            {
+                            { string SrcFile = File.Key;
+                               // if (!Directory.Exists(SrcFile)) Directory.CreateDirectory(SrcFile);
+                                var AllDestFiles = File.Value; //список куда копировать
+                                int cAllSource = AllDestFiles.Count;
+                                //cTotal += AllDestFiles.Count;
+                               
+                                foreach (var DstFile in AllDestFiles) //процесс копирования
+                                {
+                                    filesCount++;
+                                    if(System.IO.File.Exists(DstFile))//File exist
+                                    { 
+                                    try
+                                    {//TODO time of copy
+                                        //update file
+                                        var size = new FileInfo(SrcFile).Length;
+                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "Обновленный :> " + SrcFile+
+                                                "\t(" + ((double)size / 1000) + "kbit)");
+                                            CONSTS.AddToTempLine(tblog, "   Запуск  :> " + SrcFile+" ==>"+ DstFile);
+                                        System.IO.File.Copy(SrcFile, DstFile, true);
+                                            CONSTS.AddNewLine(tblog,    "   Updated :> " +  DstFile);
+                                            nUpd++;
+                                        
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        errorCopy++;
+                                        CONSTS.AddNewLine(tblog,
+                                            "err:>\t" + ex.Message);
+                                    }
+                                    
 
-                            //                updatedfiles++;
-                            //            }
-                            //            else
-                            //            {
-                            //               CONSTS.AddToTempLine(tblog, relfile);
-                            //            }
+                                }
+                                    else //copy new file
+                                    {
+                                     string filedir = SrcFile.Remove(SrcFile.Length - SrcFile.Split('\\').Last().Length);
+                                        if (!Directory.Exists(filedir)) Directory.CreateDirectory(filedir);
+                                        try
+                                        {
+                                            
+                                            var size = new FileInfo(SrcFile).Length;
+                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "Новый :> " + SrcFile +
+                                                "\t(" + ((double)size / 1000) + "kbit)");
+                                            CONSTS.AddToTempLine(tblog, "   Запуск  :> " + SrcFile + " ==>" + DstFile);
+                                            System.IO.File.Copy(SrcFile, DstFile, true);
+                                            CONSTS.AddNewLine(tblog,    "   Copied  :> " +  DstFile);
+                                            nNew++;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            errorCopy++;
+                                            CONSTS.AddNewLine(tblog,
+                                                "err:>\t" + DstFile + "\t" + ex.Message);
+                                        }
 
-                            //            CONSTS.invokeProgress(progressBar1, (int) (filesCount * 100 / cAllSource));
+                                   }//end IF Else
+                                    CONSTS.invokeProgress(progressBar1, (int)(filesCount * 100 / cTotal));
+                                } //конец перебора файлов назначения
 
-                            //        }
-                            //        else //copy new file
-                            //        {
-                            //            string newfile = destdir.Dir + relfile;
-                            //            string filedir =
-                            //                newfile.Remove(newfile.Length - newfile.Split('\\').Last().Length);
-                            //            if (!Directory.Exists(filedir)) Directory.CreateDirectory(filedir);
-                            //            try
-                            //            {
-                            //                nfile++;
-                            //                var size = new FileInfo(file.Key).Length;
-                            //                CONSTS.AddNewLine(tblog,
-                            //                    "new:>" + nfile.ToString() + "). " + relfile);
-                            //                File.Copy(file.Key, newfile, true);
-                            //                CONSTS.AddToLastLine(tblog,
-                            //                    "\t(" + ((double) size / 1000) + "kbit)");
-                            //            }
-                            //            catch (Exception ex)
-                            //            {
-                            //                errorCopy++;
-                            //                CONSTS.AddNewLine(tblog,
-                            //                    "err:>\t" + relfile + "\t" + ex.Message);
-                            //            }
-
-                            //            CONSTS.invokeProgress(progressBar1, (int) (filesCount * 100 / cAllSource));
-                            //            newfiles++;
-                            //        }
-                            //    } //конец перебора исходных файлов
-
-                            //}
+                            }//конец перебора исходных файлов
 
                             CONSTS.AddNewLine(tblog, "--------------------------------");
                             CONSTS.AddNewLine(tblog, project.Name + " синхронизирован.");
-                            CONSTS.AddNewLine(tblog, "Новых файлов: \t" + newfiles.ToString());
-                            CONSTS.AddNewLine(tblog, "Обновлено файлов:\t" + updatedfiles.ToString());
-                            CONSTS.AddNewLine(tblog, "Всего файлов:\t" + cTotal.ToString());
+                            CONSTS.AddNewLine(tblog, "Новых файлов: \t\t" + nNew.ToString());
+                            CONSTS.AddNewLine(tblog, "Обновлено файлов:  \t" + nUpd.ToString());
+                            CONSTS.AddNewLine(tblog, "Всего исходных файлов:\t" + cTotal.ToString());
+                            CONSTS.AddNewLine(tblog, "Всего скопировано: \t" + cTotal.ToString());
                             CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
                            
