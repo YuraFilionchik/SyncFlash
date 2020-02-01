@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO;
 using System.Management;
-
+//TODO Silent mode
 namespace SyncFlash
 {
     public partial class Form1 : Form
@@ -180,22 +180,21 @@ namespace SyncFlash
                                     foreach (var otherDir in OnlineDirs) //Поиск текущего файла dateFile в остальных директориях
                                     {
                                         if (otherDir == Dir) continue; //пропуск текущей директории
-                                        //TODO не работает следующая строка
-                                        var file = otherDir.AllFiles().FirstOrDefault(x => GetRelationPath(x.Key,Dir.Dir) == relatePath);//поиск такого же файла
+                                        var file = otherDir.AllFiles().FirstOrDefault(x => GetRelationPath(x.Key,otherDir.Dir) == relatePath);//поиск такого же файла
                                         //если такого файла в Директории нет
                                         if (String.IsNullOrEmpty(file.Key)) //создадим путь для копирования в эту директорию
                                         {
                                             //пара значений (Путь файла, Время последнего изменения)
                                             file = new KeyValuePair<string, DateTime>
                                             (newest.Key.Replace(Dir.Dir, otherDir.Dir), newest.Value);
-                                            otherFiles.Add(file.Key, file.Value);//добавление в список
+                                            otherFiles.Add(file.Key, file.Value);//добавление в список назначения
                                             continue;
                                         }
                                         if (newest.Value > file.Value)
                                             otherFiles.Add(file.Key, file.Value);//добавление файла в список файлов
                                         else if (newest.Value == file.Value)
                                         {
-                                            continue; //SKIP  SAME FILES, DONT COPY!!!
+                                           continue; //SKIP  SAME FILES, DONT COPY!!!
                                         }else
                                         //меняем переменную новейшего файла с текущим
                                         {
@@ -205,6 +204,7 @@ namespace SyncFlash
                                         }
                                     }//нашли самый новый файл dateFile среди остальных директорий
                                     //теперь добавляем в очередь
+                                    if(otherFiles.Count()!=0)
                                     Queue.Add(newest.Key, otherFiles.Keys.ToList());
                                 }
                             }//проверили все файлы и добавили их в очередь

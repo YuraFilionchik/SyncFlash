@@ -53,6 +53,7 @@
             this.tblog = new System.Windows.Forms.DataGridView();
             this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.cbSilent = new System.Windows.Forms.CheckBox();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -293,7 +294,7 @@
             // 
             this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(531, 26);
+            this.checkBox2.Location = new System.Drawing.Point(531, 20);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(72, 17);
             this.checkBox2.TabIndex = 12;
@@ -301,11 +302,22 @@
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
+            // cbSilent
+            // 
+            this.cbSilent.AutoSize = true;
+            this.cbSilent.Location = new System.Drawing.Point(531, 38);
+            this.cbSilent.Name = "cbSilent";
+            this.cbSilent.Size = new System.Drawing.Size(93, 17);
+            this.cbSilent.TabIndex = 13;
+            this.cbSilent.Text = "Тихий режим";
+            this.cbSilent.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(634, 388);
+            this.Controls.Add(this.cbSilent);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.tblog);
             this.Controls.Add(this.button1);
@@ -352,6 +364,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn data;
         private System.Windows.Forms.ToolStripMenuItem переименоватьToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox cbSilent;
     }
 }
 
