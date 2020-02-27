@@ -54,6 +54,7 @@
             this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.cbSilent = new System.Windows.Forms.CheckBox();
+            this.btLog = new System.Windows.Forms.Button();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -146,7 +147,7 @@
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBar1.Location = new System.Drawing.Point(0, 365);
+            this.progressBar1.Location = new System.Drawing.Point(0, 447);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(634, 23);
             this.progressBar1.Step = 1;
@@ -225,6 +226,7 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.BackColor = System.Drawing.Color.Aqua;
             this.button1.FlatAppearance.BorderColor = System.Drawing.Color.Blue;
             this.button1.FlatAppearance.BorderSize = 4;
@@ -280,7 +282,7 @@
             this.tblog.RowTemplate.Height = 10;
             this.tblog.RowTemplate.ReadOnly = true;
             this.tblog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.tblog.Size = new System.Drawing.Size(626, 203);
+            this.tblog.Size = new System.Drawing.Size(626, 285);
             this.tblog.TabIndex = 11;
             // 
             // data
@@ -294,6 +296,7 @@
             // 
             this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox2.AutoSize = true;
+            this.checkBox2.Enabled = false;
             this.checkBox2.Location = new System.Drawing.Point(531, 20);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(72, 17);
@@ -304,6 +307,7 @@
             // 
             // cbSilent
             // 
+            this.cbSilent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSilent.AutoSize = true;
             this.cbSilent.Location = new System.Drawing.Point(531, 38);
             this.cbSilent.Name = "cbSilent";
@@ -312,11 +316,23 @@
             this.cbSilent.Text = "Тихий режим";
             this.cbSilent.UseVisualStyleBackColor = true;
             // 
+            // btLog
+            // 
+            this.btLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btLog.Location = new System.Drawing.Point(609, 2);
+            this.btLog.Name = "btLog";
+            this.btLog.Size = new System.Drawing.Size(24, 23);
+            this.btLog.TabIndex = 14;
+            this.btLog.Text = "->";
+            this.btLog.UseVisualStyleBackColor = true;
+            this.btLog.Click += new System.EventHandler(this.btLog_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 388);
+            this.ClientSize = new System.Drawing.Size(634, 470);
+            this.Controls.Add(this.btLog);
             this.Controls.Add(this.cbSilent);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.tblog);
@@ -365,6 +381,7 @@
         private System.Windows.Forms.ToolStripMenuItem переименоватьToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox cbSilent;
+        private System.Windows.Forms.Button btLog;
     }
 }
 

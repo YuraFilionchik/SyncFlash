@@ -11,9 +11,9 @@ namespace SyncFlash
 {
     class Project
     {
-        public List<Projdir> AllProjectDirs;
-        public List<string> ExceptionDirs;
-        public List<Projdir> OnlineDirs
+        public List<Projdir> AllProjectDirs; //список всех папок для синхронизации
+        public List<string> ExceptionDirs; //папки исключения
+        public List<Projdir> OnlineDirs//доступные сейчас
         {
             get
             {
@@ -51,6 +51,8 @@ namespace SyncFlash
         {
             if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(GetProjDirFromString(dir));
         }
+
+        //возвращает тип Project по названию папки
         private Projdir GetProjDirFromString(string dir)
         {
             return AllProjectDirs.First(x => x.Dir == dir);
@@ -91,6 +93,7 @@ namespace SyncFlash
     /// </summary>
     class Projdir
     {
+        MyTimer tmr;
         public string _dir;
         private Project FromProject;
         private string pc_name;
@@ -124,8 +127,10 @@ namespace SyncFlash
         }
         public bool IsOnline
         {
-            get { return Directory.Exists(Dir); }
+            get {
+                return Directory.Exists(Dir); }
         }
+        private filesdates _allfiles;
 
         private DateTime DefaultDate= new DateTime(2000, 1, 1);
         public Projdir(string dir,Project project)
@@ -133,37 +138,73 @@ namespace SyncFlash
             Dir = dir;
             pc_name= System.Environment.MachineName;
             FromProject = project;
+            tmr = new MyTimer(Form1.log);
         }
         public Projdir(string dir,Project project, string pc)
         {
             Dir = dir;
             pc_name = pc;
             FromProject = project;
+            tmr = new MyTimer(Form1.log);
+        }
+        
+        /// <summary>
+        /// Поиск файла и даты в списке всех файлов
+        /// </summary>
+        /// <param name="relateFilePath"></param>
+        /// <returns></returns>
+        public KeyValuePair<string,DateTime> FindFile(string relateFilePath)
+        {
+            string ABSpath = Dir + relateFilePath;
+            //tmr.Start("===Find file " + ABSpath, 12);
+            foreach (var file in AllFiles())
+            {
+                // if (Form1.GetRelationPath(file.Key, Dir) == relateFilePath)
+                if (file.Key == ABSpath)
+                {
+                    // tmr.Stop(12);
+                    tmr.AddLine("Find file " + ABSpath);
+                    return file;
+                }
+            }
+            tmr.Stop(12);
+            return new KeyValuePair<string, DateTime>() ;
         }
         /// <summary>
         /// Dictionary<files,datetime last write> всех файлов в Projdir
         /// </summary>
         public  filesdates AllFiles()
         {
+            if (!IsOnline) {   return new filesdates(); }
+            //List<string> files1 = new List<string>();//all files in Dir
+            //files1.AddRange(Directory.GetFiles(Dir));//all files in Dir
+            //string[] subdirs = Directory.GetDirectories(Dir);//all dirs in Dir
+            //if (subdirs.Length != 0)//find all files in subdirs
+            //    foreach (var subdir in subdirs)
+            //    {
+            //        var files2 = Directory.GetFiles(subdir);
+            //        if (files2.Length != 0) files1.AddRange(files2);
+            //    }
+            //чтение всех файлов проекта, кроме исключений
+            filesdates res = new filesdates();
             
-            
-                if (!IsOnline) return new filesdates();
-                //List<string> files1 = new List<string>();//all files in Dir
-                //files1.AddRange(Directory.GetFiles(Dir));//all files in Dir
-                //string[] subdirs = Directory.GetDirectories(Dir);//all dirs in Dir
-                //if (subdirs.Length != 0)//find all files in subdirs
-                //    foreach (var subdir in subdirs)
-                //    {
-                //        var files2 = Directory.GetFiles(subdir);
-                //        if (files2.Length != 0) files1.AddRange(files2);
-                //    }
-                //чтение всех файлов проекта, кроме исключений
-                filesdates res = new filesdates();
-                var AllFiles = GetfilesIndir(Dir);
-                foreach (var file in AllFiles)
+            string[] AllFiles;
+            if (_allfiles == null)
+            { 
+                tmr.Start("===GetFilesInDir " + Dir, 22);
+                AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
+                tmr.Stop(22);
+            }
+            else  return _allfiles; 
+            var n=AllFiles.Count();
+            //tmr.Stop(22);
+           // tmr.Start("Перевод в структуру filesdates ",23);
+            foreach (var file in AllFiles)
                 {
                     res.Add(file, File.GetLastWriteTime(file));
                 }
+           // tmr.Stop(23);
+            _allfiles = res;
                 return res;
             
         }
