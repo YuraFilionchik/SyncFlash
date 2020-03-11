@@ -21,7 +21,7 @@ namespace SyncFlash
 
         public void ClearLog()
             {
-                textBox1.Clear();
+            CONSTS.invokeTBClearText(textBox1);// textBox1.Clear();
             }
 
         public void AddLine(string text)

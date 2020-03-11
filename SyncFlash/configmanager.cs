@@ -141,6 +141,12 @@ namespace SyncFlash
             if (tb.InvokeRequired) tb.Invoke(new Action<string>(s => tb.AppendText(s)), text+ "\r\n");
             else tb.AppendText(text+ "\r\n");
         }
+
+        public static void invokeTBClearText(TextBox tb)
+        {
+            if (tb.InvokeRequired) tb.Invoke(new Action<string>(s => tb.Clear()));
+            else tb.Clear();
+        }
         public static void invokeEnableControl(Control control, bool enabled)
         {
             if (control.InvokeRequired) control.Invoke(new Action<bool>(s => control.Enabled=s), enabled);

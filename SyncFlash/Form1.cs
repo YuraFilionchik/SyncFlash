@@ -264,8 +264,9 @@ namespace SyncFlash
                                     msg += file.Key + "\r\n";
                                 }
                                 tmr.Stop();
-                                var dr = MessageBox.Show(msg, project.Name, MessageBoxButtons.YesNo);
-                            if (dr == DialogResult.No) {SetSyncStatus(false);return;}
+                                var msgBox = new MsgDialog(msg);
+                               var dr= msgBox.ShowDialog();
+                            if (dr != DialogResult.OK) {SetSyncStatus(false);return;}
                             }
                            
                             CONSTS.AddNewLine(tblog, "--------------------------------------------");

@@ -37,7 +37,7 @@
             // 
             this.btOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btOK.Location = new System.Drawing.Point(22, 265);
+            this.btOK.Location = new System.Drawing.Point(22, 348);
             this.btOK.Name = "btOK";
             this.btOK.Size = new System.Drawing.Size(93, 33);
             this.btOK.TabIndex = 0;
@@ -49,7 +49,7 @@
             // btCancel
             // 
             this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btCancel.Location = new System.Drawing.Point(343, 265);
+            this.btCancel.Location = new System.Drawing.Point(672, 348);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(95, 33);
             this.btCancel.TabIndex = 1;
@@ -66,18 +66,19 @@
             this.tbText.Multiline = true;
             this.tbText.Name = "tbText";
             this.tbText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbText.Size = new System.Drawing.Size(465, 260);
+            this.tbText.Size = new System.Drawing.Size(794, 343);
             this.tbText.TabIndex = 2;
             // 
             // MsgDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 300);
+            this.ClientSize = new System.Drawing.Size(793, 383);
             this.Controls.Add(this.tbText);
             this.Controls.Add(this.btCancel);
             this.Controls.Add(this.btOK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MaximumSize = new System.Drawing.Size(1400, 700);
             this.Name = "MsgDialog";
             this.Text = "Синхронизация каталогов";
             this.ResumeLayout(false);
