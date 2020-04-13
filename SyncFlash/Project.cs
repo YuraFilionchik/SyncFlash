@@ -208,6 +208,22 @@ namespace SyncFlash
                 return res;
             
         }
+        public void ReadFiles()
+        {
+
+            filesdates res = new filesdates();
+
+            string[] AllFiles;
+                           
+                AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
+                              
+           foreach (var file in AllFiles)
+            {
+                res.Add(file, File.GetLastWriteTime(file));
+            }
+           
+            _allfiles = res;
+        }
         private string[] GetfilesIndir(string dir)
         {
             string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;//относительный путь
