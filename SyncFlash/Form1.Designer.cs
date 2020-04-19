@@ -41,6 +41,7 @@
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.listExceptions = new System.Windows.Forms.ListBox();
@@ -55,7 +56,7 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.cbSilent = new System.Windows.Forms.CheckBox();
             this.btLog = new System.Windows.Forms.Button();
-            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.обновитьСписокПроектовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -77,35 +78,36 @@
             this.добавитьПроектToolStripMenuItem,
             this.удалитьПроектToolStripMenuItem,
             this.синхронизироватьToolStripMenuItem,
-            this.переименоватьToolStripMenuItem});
+            this.переименоватьToolStripMenuItem,
+            this.обновитьСписокПроектовToolStripMenuItem});
             this.contextprojects.Name = "contextprojects";
-            this.contextprojects.Size = new System.Drawing.Size(216, 92);
+            this.contextprojects.Size = new System.Drawing.Size(225, 136);
             // 
             // добавитьПроектToolStripMenuItem
             // 
             this.добавитьПроектToolStripMenuItem.Name = "добавитьПроектToolStripMenuItem";
-            this.добавитьПроектToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.добавитьПроектToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.добавитьПроектToolStripMenuItem.Text = "Добавить проект";
             this.добавитьПроектToolStripMenuItem.Click += new System.EventHandler(this.добавитьПроектToolStripMenuItem_Click);
             // 
             // удалитьПроектToolStripMenuItem
             // 
             this.удалитьПроектToolStripMenuItem.Name = "удалитьПроектToolStripMenuItem";
-            this.удалитьПроектToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.удалитьПроектToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.удалитьПроектToolStripMenuItem.Text = "Удалить проект из списка";
             this.удалитьПроектToolStripMenuItem.Click += new System.EventHandler(this.удалитьПроектToolStripMenuItem_Click);
             // 
             // синхронизироватьToolStripMenuItem
             // 
             this.синхронизироватьToolStripMenuItem.Name = "синхронизироватьToolStripMenuItem";
-            this.синхронизироватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.синхронизироватьToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.синхронизироватьToolStripMenuItem.Text = "-=Синхронизировать=-";
             this.синхронизироватьToolStripMenuItem.Click += new System.EventHandler(this.синхронизироватьToolStripMenuItem_Click);
             // 
             // переименоватьToolStripMenuItem
             // 
             this.переименоватьToolStripMenuItem.Name = "переименоватьToolStripMenuItem";
-            this.переименоватьToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.переименоватьToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.переименоватьToolStripMenuItem.Text = "Переименовать...";
             this.переименоватьToolStripMenuItem.Click += new System.EventHandler(this.переименоватьToolStripMenuItem_Click);
             // 
@@ -130,7 +132,7 @@
             this.удалитьПапкуToolStripMenuItem,
             this.копироватьЭтуПапкуВОстальныеToolStripMenuItem});
             this.contextdirs.Name = "contextdirs";
-            this.contextdirs.Size = new System.Drawing.Size(269, 92);
+            this.contextdirs.Size = new System.Drawing.Size(269, 70);
             // 
             // добавитьПапкуToolStripMenuItem
             // 
@@ -145,6 +147,13 @@
             this.удалитьПапкуToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.удалитьПапкуToolStripMenuItem.Text = "Удалить папку";
             this.удалитьПапкуToolStripMenuItem.Click += new System.EventHandler(this.удалитьПапкуToolStripMenuItem_Click);
+            // 
+            // копироватьЭтуПапкуВОстальныеToolStripMenuItem
+            // 
+            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Name = "копироватьЭтуПапкуВОстальныеToolStripMenuItem";
+            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Text = "Копировать эту папку в остальные!";
+            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Click += new System.EventHandler(this.копироватьЭтуПапкуВОстальныеToolStripMenuItem_Click);
             // 
             // progressBar1
             // 
@@ -329,12 +338,12 @@
             this.btLog.UseVisualStyleBackColor = true;
             this.btLog.Click += new System.EventHandler(this.btLog_Click);
             // 
-            // копироватьЭтуПапкуВОстальныеToolStripMenuItem
+            // обновитьСписокПроектовToolStripMenuItem
             // 
-            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Name = "копироватьЭтуПапкуВОстальныеToolStripMenuItem";
-            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Text = "Копировать эту папку в остальные!";
-            this.копироватьЭтуПапкуВОстальныеToolStripMenuItem.Click += new System.EventHandler(this.копироватьЭтуПапкуВОстальныеToolStripMenuItem_Click);
+            this.обновитьСписокПроектовToolStripMenuItem.Name = "обновитьСписокПроектовToolStripMenuItem";
+            this.обновитьСписокПроектовToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.обновитьСписокПроектовToolStripMenuItem.Text = "Обновить список проектов";
+            this.обновитьСписокПроектовToolStripMenuItem.Click += new System.EventHandler(this.обновитьСписокПроектовToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -392,6 +401,7 @@
         private System.Windows.Forms.CheckBox cbSilent;
         private System.Windows.Forms.Button btLog;
         private System.Windows.Forms.ToolStripMenuItem копироватьЭтуПапкуВОстальныеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem обновитьСписокПроектовToolStripMenuItem;
     }
 }
 

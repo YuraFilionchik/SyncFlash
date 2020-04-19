@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btOK = new System.Windows.Forms.Button();
             this.btCancel = new System.Windows.Forms.Button();
             this.dgv = new System.Windows.Forms.DataGridView();
@@ -38,7 +39,12 @@
             this.Arrow = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Target = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.добавитьФайлВИсключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.отменитьДобавленныеИсключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btOK
@@ -81,9 +87,12 @@
             this.Arrow,
             this.DateTarget,
             this.Target});
+            this.dgv.ContextMenuStrip = this.contextMenuStrip1;
             this.dgv.Location = new System.Drawing.Point(1, -2);
+            this.dgv.MultiSelect = false;
             this.dgv.Name = "dgv";
             this.dgv.RowHeadersVisible = false;
+            this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv.Size = new System.Drawing.Size(775, 323);
             this.dgv.TabIndex = 2;
             // 
@@ -137,6 +146,36 @@
             this.Target.HeaderText = "Назначение";
             this.Target.Name = "Target";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.добавитьФайлВИсключенияToolStripMenuItem,
+            this.отменитьДобавленныеИсключенияToolStripMenuItem,
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(317, 92);
+            // 
+            // добавитьФайлВИсключенияToolStripMenuItem
+            // 
+            this.добавитьФайлВИсключенияToolStripMenuItem.Name = "добавитьФайлВИсключенияToolStripMenuItem";
+            this.добавитьФайлВИсключенияToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.добавитьФайлВИсключенияToolStripMenuItem.Text = "Добавить файл в исключения";
+            this.добавитьФайлВИсключенияToolStripMenuItem.Click += new System.EventHandler(this.добавитьФайлВИсключенияToolStripMenuItem_Click);
+            // 
+            // отменитьДобавленныеИсключенияToolStripMenuItem
+            // 
+            this.отменитьДобавленныеИсключенияToolStripMenuItem.Name = "отменитьДобавленныеИсключенияToolStripMenuItem";
+            this.отменитьДобавленныеИсключенияToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.отменитьДобавленныеИсключенияToolStripMenuItem.Text = "Отменить добавленные исключения";
+            this.отменитьДобавленныеИсключенияToolStripMenuItem.Click += new System.EventHandler(this.отменитьДобавленныеИсключенияToolStripMenuItem_Click);
+            // 
+            // поменятьМестамиИсточникИНазначениеToolStripMenuItem
+            // 
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Name = "поменятьМестамиИсточникИНазначениеToolStripMenuItem";
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Text = "Поменять местами Источник и Назначение";
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Click += new System.EventHandler(this.поменятьМестамиИсточникИНазначениеToolStripMenuItem_Click);
+            // 
             // MsgDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -150,6 +189,7 @@
             this.Name = "MsgDialog";
             this.Text = "Синхронизация каталогов";
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -166,5 +206,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Arrow;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateTarget;
         private System.Windows.Forms.DataGridViewTextBoxColumn Target;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem добавитьФайлВИсключенияToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem отменитьДобавленныеИсключенияToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem поменятьМестамиИсточникИНазначениеToolStripMenuItem;
     }
 }

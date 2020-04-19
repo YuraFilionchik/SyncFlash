@@ -16,7 +16,7 @@ namespace SyncFlash
     {
         configmanager cfg;
         public string DriveLette;
-        const string cfg_file = "conf.ini";
+       public const string cfg_file = "conf.ini";
         string pc_name = Environment.MachineName;
         List<Project> Projects;
         private bool IsRunningSync=false; // if sync is running
@@ -204,7 +204,9 @@ namespace SyncFlash
                                 var newest = dateFile; //самый свежий файл
                                     string SrcDir = Dir.Dir;
                                 //создаем список файлов, которые нужно заменить файлом dateFile, файл назначения
+                                //TODO create new structure
                                 Dictionary<string, DateTime> otherFiles = new Dictionary<string, DateTime>();
+
                                 foreach (var otherDir in OnlineDirs) //Поиск текущего файла dateFile в остальных директориях
                                 {
                                     if (otherDir == Dir) continue; //пропуск текущей директории
@@ -360,7 +362,8 @@ namespace SyncFlash
                             CONSTS.AddNewLine(tblog, "Всего скопировано: \t" + cTotal.ToString());
                             CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
-                           
+                            Projects = cfg.ReadAllProjects();
+                            
                         }
 
 
@@ -369,6 +372,7 @@ namespace SyncFlash
                     {
                         CONSTS.EnableButton(button1);
                         SetSyncStatus(false);
+                        
                     }
                 }
 
@@ -418,6 +422,7 @@ namespace SyncFlash
         private void SaveAllProjects()
         {
           if(Projects!=null && Projects.Count!=0)  cfg.SaveProjects(Projects);
+          
         }
 
         #region contextMenu
@@ -544,7 +549,12 @@ namespace SyncFlash
             var selected = List_Projects.SelectedItem;
             if (selected == null) return;
             var selectedDir = list_dirs.SelectedItems;
-            if (selectedDir.Count == 0) return;
+            if (selectedDir.Count == 0)
+            {
+                CONSTS.AddNewLine(tblog, "Для добавления исключений" +
+                    " нужно выбрать одну из папок проекта, в котором будете указывать исключения");
+                return;
+            }
             var selectedExc = listExceptions.SelectedItems;
             if (selectedExc.Count == 0) return;
             var pr = Projects.First(x => x.Name == selected.ToString());
@@ -700,6 +710,11 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
                 }
             }
+        }
+
+        private void обновитьСписокПроектовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Projects = cfg.ReadAllProjects();
         }
     }
 }

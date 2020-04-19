@@ -278,6 +278,7 @@ namespace SyncFlash
             List<Project> Result = new List<Project>();
             try
             {
+                doc = XDocument.Load(Filepath);
                 var projs = from pr in doc.Descendants(ProjXML)
                             select new
                             {
