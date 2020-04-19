@@ -623,5 +623,83 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
         {
             log.ClearLog();
         }
+
+        /// <summary>
+        /// Копировать выделенную папку в другие без проверки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void копироватьЭтуПапкуВОстальныеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selected = List_Projects.SelectedItem;
+            if (selected == null) return;
+            var selectedDir = list_dirs.SelectedItems;
+            if (selectedDir.Count == 0) return;
+            string SelectedDirPATH = selectedDir[0].Text;
+            if (DriveLette == SelectedDirPATH.Split('\\')[0])//FlashDrive
+            {
+                SelectedDirPATH = GetRelationPath(SelectedDirPATH, DriveLette);
+            }
+            var Project = Projects.First(x => x.Name == selected.ToString());
+            Thread CopyDIRSThread = new Thread(delegate ()
+            {
+               
+                CONSTS.AddNewLine(tblog, "Проект " + Project.Name+". Принудительное копирование "+SelectedDirPATH);
+                foreach (Projdir onlineDir in Project.OnlineDirs)
+            {
+                if (onlineDir.Dir == SelectedDirPATH) continue;
+                //copy selected Dir into others
+                DirectoryCopy(SelectedDirPATH, onlineDir.Dir, true);
+                    CONSTS.AddNewLine(tblog, SelectedDirPATH+" } ---> {"+onlineDir.Dir );
+            }
+                CONSTS.AddNewLine(tblog, "\t\tГотово.");
+            });
+            CopyDIRSThread.Start();
+            
+
+        }
+        /// <summary>
+        /// Копирование директории
+        /// </summary>
+        /// <param name="sourceDirName"></param>
+        /// <param name="destDirName"></param>
+        /// <param name="copySubDirs"></param>
+        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, true);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
     }
 }
