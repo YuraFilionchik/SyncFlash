@@ -203,10 +203,15 @@ namespace SyncFlash
 
                                 var newest = dateFile; //самый свежий файл
                                     string SrcDir = Dir.Dir;
-                                //создаем список файлов, которые нужно заменить файлом dateFile, файл назначения
-                                //TODO create new structure
-                                Dictionary<string, DateTime> otherFiles = new Dictionary<string, DateTime>();
-
+                                    //создаем список файлов, которые нужно заменить файлом dateFile, файл назначения
+                                    //TODO create new structure
+                                    // Dictionary<string, DateTime> otherFiles = new Dictionary<string, DateTime>();
+                                    
+                                    List<Tuple<string, string, DateTime,bool>> otherFiles = new List<Tuple<string, string, DateTime,bool>>();
+                                    //item1 = Fullpath,
+                                    //item2 = Dir,
+                                    //item3 = DateTime lastWrite,
+                                    //item4 = IsNewfile
                                 foreach (var otherDir in OnlineDirs) //Поиск текущего файла dateFile в остальных директориях
                                 {
                                     if (otherDir == Dir) continue; //пропуск текущей директории
@@ -217,30 +222,19 @@ namespace SyncFlash
                                         //пара значений (Путь файла, Время последнего изменения)
                                         file = new KeyValuePair<string, DateTime>
                                         (newest.Key.Replace(Dir.Dir, otherDir.Dir), newest.Value);
-                                        otherFiles.Add(file.Key, file.Value);//добавление в список назначения
-                                                                             //нужно проверить существование папки назначения и создать ее, если нужно
-                                        #region выделение директории из пути файла
-                                        //var splits = file.Key.Split('\\');
-                                        //string newDir = ""; //new Directory ??
-                                        //for (int i = 0; i < splits.Length - 1; i++)
-                                        //{
-                                        //    if (i == splits.Length - 2) newDir += splits[i];
-                                        //    else newDir += splits[i] + "\\";
-                                        //}
-                                        //if (!Directory.Exists(newDir)) Directory.CreateDirectory(newDir);
-                                        #endregion
+                                        otherFiles.Add(new Tuple<string, string, DateTime,bool>( file.Key,otherDir.Dir, file.Value,true));//добавление в список назначения
                                         continue;
                                     }
                                     if (newest.Value > file.Value)
-                                        otherFiles.Add(file.Key, file.Value);//добавление файла в список файлов
+                                        otherFiles.Add(new Tuple<string, string, DateTime,bool>(file.Key, otherDir.Dir, file.Value,false));//добавление файла в список файлов
                                     else if (newest.Value == file.Value)
                                     {
                                         continue; //SKIP  SAME FILES, DONT COPY!!!
                                     } else
                                     //меняем переменную новейшего файла с текущим
                                     {
-                                        if (!otherFiles.ContainsKey(newest.Key))
-                                            otherFiles.Add(newest.Key, newest.Value);
+                                        if (!otherFiles.Any(x=>x.Item1==newest.Key))
+                                            otherFiles.Add(new Tuple<string, string, DateTime,bool>(newest.Key, Dir.Dir, newest.Value,false));
                                             {
                                                 newest = file;
                                                 SrcDir = otherDir.Dir;
@@ -253,7 +247,14 @@ namespace SyncFlash
                                 if (otherFiles.Count() != 0)
                                     foreach (var otherfile in otherFiles)
                                     {//Добавление для каждого файла  назначения своей очереди
-                                        queue.Add(new Queue(true, newest.Key, otherfile.Key,SrcDir, newest.Value, otherfile.Value));
+                                        queue.Add(new Queue(true, //Active status
+                                            newest.Key,         //Full Source filepath
+                                            otherfile.Item1,    //full Targer filepath
+                                            SrcDir,             //Directory of source file
+                                            otherfile.Item2,    //directory of target file
+                                            newest.Value,       //last modification datetime Source File
+                                            otherfile.Item3,    //last modification datetime Target File
+                                            otherfile.Item4));  //is new file? or overwrited
                                     }
 
                                 else skippedFiles.Add(GetRelationPath(newest.Key, Dir.Dir)); //если все файлы одинаковые как newest - пропускаем

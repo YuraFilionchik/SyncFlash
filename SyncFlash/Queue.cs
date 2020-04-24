@@ -18,9 +18,10 @@ namespace SyncFlash
         public string SourceFile;
         public string TargetFile;
         public string SourceFileProjectDir;
-        //public string TargetFileProjectDir;
+        public string TargetFileProjectDir;
         public DateTime DateSource;
         public DateTime DateTarget;
+        public bool isNewFile;
         /// <summary>
         /// Count of created objects
         /// </summary>
@@ -30,7 +31,7 @@ namespace SyncFlash
             Count++;
             this.Active = true;
         }
-        public Queue( bool active, string source, string target,string srcProjDir, DateTime dateS,DateTime dateT)
+        public Queue( bool active, string source, string target,string srcProjDir,string targProjDir, DateTime dateS,DateTime dateT, bool isnew)
         {
             Count++;
             this.Active = active;
@@ -40,7 +41,8 @@ namespace SyncFlash
             DateSource = dateS;
             DateTarget = dateT;
             SourceFileProjectDir = srcProjDir;
-            //TargetFileProjectDir = targProjDir;
+            TargetFileProjectDir = targProjDir;
+            isNewFile = isnew;
         }
     }
 }

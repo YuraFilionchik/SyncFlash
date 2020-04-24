@@ -21,28 +21,51 @@ namespace SyncFlash
             {
 InitializeComponent();
                 dgv.SelectionChanged += Dgv_SelectionChanged;
-
-            //Fill datagridview
-            foreach (var q in queues)
-            {
-               int i=dgv.Rows.Add();
-                dgv.Rows[i].Cells["check"].Value = q.Active;
-                dgv.Rows[i].Cells["Number"].Value = q.Number;
-                dgv.Rows[i].Cells["Source"].Value = q.SourceFile;
-                dgv.Rows[i].Cells["Target"].Value = q.TargetFile;
-                dgv.Rows[i].Cells["DateSource"].Value = q.DateSource;
-                dgv.Rows[i].Cells["DateTarget"].Value = q.DateTarget;
-                    dgv.Rows[i].Cells["Arrow"].Value = "-->";
-                }
+                ReturnedQueue = queues;
+                //Fill datagridview
+                DisplayQueues(queues);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "MsgDialog");
             }
             
-            ReturnedQueue = queues;
+            
         }
-
+        /// <summary>
+        /// Вывод очереди в таблицу datagridview
+        /// </summary>
+        /// <param name="queues"></param>
+        private void DisplayQueues(List<Queue> queues)
+        {
+            try
+            {
+                dgv.Rows.Clear();
+                foreach (var q in queues)
+                {
+                    int i = dgv.Rows.Add();
+                    dgv.Rows[i].Cells["check"].Value = q.Active;
+                    dgv.Rows[i].Cells["Number"].Value = q.Number;
+                    dgv.Rows[i].Cells["Source"].Value = q.SourceFile;
+                    dgv.Rows[i].Cells["Target"].Value = q.TargetFile;
+                    dgv.Rows[i].Cells["DateSource"].Value = q.DateSource;
+                    dgv.Rows[i].Cells["DateTarget"].Value = q.DateTarget;
+                    dgv.Rows[i].Cells["Arrow"].Value = "-->";
+                    
+                    if (q.isNewFile) //меняем цвето строки если файл новый
+                    {
+                        var defstyle = dgv.Rows[i].DefaultCellStyle;
+                        defstyle.BackColor = Color.LightGreen;
+                        dgv.Rows[i].DefaultCellStyle = defstyle;
+                    }
+                }
+                label1.Text = $"Total: {queues.Count()} files. \t\t New {queues.Count(c=>c.isNewFile)} files"; 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Display queues");
+            }
+        }
         /// <summary>
         /// Select row in datagridview
         /// </summary>
@@ -137,11 +160,45 @@ InitializeComponent();
                 DataGridViewRow selectedrow = dgv.SelectedRows[0];
                 int Number = (int)selectedrow.Cells["Number"].Value;//number of selected queue
                 Queue selectedQueue = ReturnedQueue.Find(x => x.Number == Number);
-                string oldsource;
+                if (selectedQueue.isNewFile) return;
+                string oldsourceFile=selectedQueue.SourceFile;
+                string oldsourceDir = selectedQueue.SourceFileProjectDir;
+                DateTime oldsourceDate = selectedQueue.DateSource;
+                selectedQueue.SourceFile = selectedQueue.TargetFile;
+                selectedQueue.SourceFileProjectDir = selectedQueue.TargetFileProjectDir;
+                selectedQueue.DateSource = selectedQueue.DateTarget;
+                selectedQueue.TargetFile = oldsourceFile;
+                selectedQueue.TargetFileProjectDir = oldsourceDir;
+                selectedQueue.DateTarget = oldsourceDate;
+                DisplayQueues(ReturnedQueue);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Swap Target and Source");
+            }
+        }
+
+        private void удалитьФайлВоВсехПапкахToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgv.SelectedRows.Count == 0) return;
+                DataGridViewRow selectedrow = dgv.SelectedRows[0];
+                int Number = (int)selectedrow.Cells["Number"].Value;//number of selected queue
+                Queue selectedQueue = ReturnedQueue.Find(x => x.Number == Number);
+                System.IO.File.Delete(selectedQueue.SourceFile);
+                if(!selectedQueue.isNewFile)
+                {
+                    System.IO.File.Delete(selectedQueue.TargetFile);
+                }
+                ReturnedQueue.Remove(selectedQueue);
+                DisplayQueues(ReturnedQueue);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Удаление выбранного файла");
             }
         }
     }

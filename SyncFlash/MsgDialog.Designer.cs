@@ -43,6 +43,8 @@
             this.добавитьФайлВИсключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.отменитьДобавленныеИсключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.поменятьМестамиИсточникИНазначениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -151,9 +153,10 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавитьФайлВИсключенияToolStripMenuItem,
             this.отменитьДобавленныеИсключенияToolStripMenuItem,
-            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem});
+            this.поменятьМестамиИсточникИНазначениеToolStripMenuItem,
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(317, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(317, 114);
             // 
             // добавитьФайлВИсключенияToolStripMenuItem
             // 
@@ -176,11 +179,29 @@
             this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Text = "Поменять местами Источник и Назначение";
             this.поменятьМестамиИсточникИНазначениеToolStripMenuItem.Click += new System.EventHandler(this.поменятьМестамиИсточникИНазначениеToolStripMenuItem_Click);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(122, 337);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "label1";
+            // 
+            // удалитьФайлВоВсехПапкахToolStripMenuItem
+            // 
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Name = "удалитьФайлВоВсехПапкахToolStripMenuItem";
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Text = "Удалить файл во всех папках";
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Click += new System.EventHandler(this.удалитьФайлВоВсехПапкахToolStripMenuItem_Click);
+            // 
             // MsgDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 362);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.btCancel);
             this.Controls.Add(this.btOK);
@@ -191,6 +212,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -210,5 +232,7 @@
         private System.Windows.Forms.ToolStripMenuItem добавитьФайлВИсключенияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem отменитьДобавленныеИсключенияToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem поменятьМестамиИсточникИНазначениеToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem удалитьФайлВоВсехПапкахToolStripMenuItem;
     }
 }
