@@ -193,7 +193,7 @@
             // 
             this.удалитьФайлВоВсехПапкахToolStripMenuItem.Name = "удалитьФайлВоВсехПапкахToolStripMenuItem";
             this.удалитьФайлВоВсехПапкахToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
-            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Text = "Удалить файл во всех папках";
+            this.удалитьФайлВоВсехПапкахToolStripMenuItem.Text = "Удалить файл источника и назначения";
             this.удалитьФайлВоВсехПапкахToolStripMenuItem.Click += new System.EventHandler(this.удалитьФайлВоВсехПапкахToolStripMenuItem_Click);
             // 
             // MsgDialog

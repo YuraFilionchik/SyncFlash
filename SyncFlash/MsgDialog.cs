@@ -51,13 +51,16 @@ InitializeComponent();
                     dgv.Rows[i].Cells["DateSource"].Value = q.DateSource;
                     dgv.Rows[i].Cells["DateTarget"].Value = q.DateTarget;
                     dgv.Rows[i].Cells["Arrow"].Value = "-->";
-                    
+                    var defstyle = dgv.Rows[i].DefaultCellStyle;
                     if (q.isNewFile) //меняем цвето строки если файл новый
                     {
-                        var defstyle = dgv.Rows[i].DefaultCellStyle;
+                        
                         defstyle.BackColor = Color.LightGreen;
-                        dgv.Rows[i].DefaultCellStyle = defstyle;
-                    }
+                        
+                    }else if((q.DateSource-q.DateTarget).TotalMinutes<3)//разница времени файлов меньше 3 минут
+                        defstyle.BackColor = Color.LightSkyBlue;
+                    dgv.Rows[i].DefaultCellStyle = defstyle;
+
                 }
                 label1.Text = $"Total: {queues.Count()} files. \t\t New {queues.Count(c=>c.isNewFile)} files"; 
             }
