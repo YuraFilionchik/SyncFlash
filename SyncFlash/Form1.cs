@@ -159,7 +159,8 @@ namespace SyncFlash
                     int updatedfiles = 0;
                     int errorCopy = 0;
 
-                    var OnlineDirs = project.OnlineDirs;//.AllProjectDirs.Where(x => x.IsOnline); 
+                    var OnlineDirs = project.OnlineDirs.Where(x=>x.PC_Name==pc_name || x.PC_Name==CONSTS.FlashDrive);//.AllProjectDirs.Where(x => x.IsOnline); 
+                        
                     if (OnlineDirs.Count() == 0) { SetSyncStatus(false); return; }
                     if (OnlineDirs.Count() == 1)
                     {
@@ -729,6 +730,11 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
         private void обновитьСписокПроектовToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Projects = cfg.ReadAllProjects();
+        }
+
+        private void CheckBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

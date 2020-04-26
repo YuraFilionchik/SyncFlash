@@ -37,6 +37,7 @@
             this.удалитьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.синхронизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.переименоватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.обновитьСписокПроектовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.list_dirs = new System.Windows.Forms.ListView();
             this.contextdirs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +57,6 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.cbSilent = new System.Windows.Forms.CheckBox();
             this.btLog = new System.Windows.Forms.Button();
-            this.обновитьСписокПроектовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextprojects.SuspendLayout();
             this.contextdirs.SuspendLayout();
             this.contextExceptions.SuspendLayout();
@@ -81,7 +81,7 @@
             this.переименоватьToolStripMenuItem,
             this.обновитьСписокПроектовToolStripMenuItem});
             this.contextprojects.Name = "contextprojects";
-            this.contextprojects.Size = new System.Drawing.Size(225, 136);
+            this.contextprojects.Size = new System.Drawing.Size(225, 114);
             // 
             // добавитьПроектToolStripMenuItem
             // 
@@ -110,6 +110,13 @@
             this.переименоватьToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.переименоватьToolStripMenuItem.Text = "Переименовать...";
             this.переименоватьToolStripMenuItem.Click += new System.EventHandler(this.переименоватьToolStripMenuItem_Click);
+            // 
+            // обновитьСписокПроектовToolStripMenuItem
+            // 
+            this.обновитьСписокПроектовToolStripMenuItem.Name = "обновитьСписокПроектовToolStripMenuItem";
+            this.обновитьСписокПроектовToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.обновитьСписокПроектовToolStripMenuItem.Text = "Обновить список проектов";
+            this.обновитьСписокПроектовToolStripMenuItem.Click += new System.EventHandler(this.обновитьСписокПроектовToolStripMenuItem_Click);
             // 
             // list_dirs
             // 
@@ -177,6 +184,7 @@
             this.checkBox1.TabIndex = 5;
             this.checkBox1.Text = "OnlineOnly";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged_1);
             // 
             // listExceptions
             // 
@@ -337,13 +345,6 @@
             this.btLog.Text = "->";
             this.btLog.UseVisualStyleBackColor = true;
             this.btLog.Click += new System.EventHandler(this.btLog_Click);
-            // 
-            // обновитьСписокПроектовToolStripMenuItem
-            // 
-            this.обновитьСписокПроектовToolStripMenuItem.Name = "обновитьСписокПроектовToolStripMenuItem";
-            this.обновитьСписокПроектовToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.обновитьСписокПроектовToolStripMenuItem.Text = "Обновить список проектов";
-            this.обновитьСписокПроектовToolStripMenuItem.Click += new System.EventHandler(this.обновитьСписокПроектовToolStripMenuItem_Click);
             // 
             // Form1
             // 

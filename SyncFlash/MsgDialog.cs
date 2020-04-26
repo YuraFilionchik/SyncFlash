@@ -44,7 +44,7 @@ InitializeComponent();
                 foreach (var q in queues)
                 {
                     int i = dgv.Rows.Add();
-                    dgv.Rows[i].Cells["check"].Value = q.Active;
+                   
                     dgv.Rows[i].Cells["Number"].Value = q.Number;
                     dgv.Rows[i].Cells["Source"].Value = q.SourceFile;
                     dgv.Rows[i].Cells["Target"].Value = q.TargetFile;
@@ -54,12 +54,17 @@ InitializeComponent();
                     var defstyle = dgv.Rows[i].DefaultCellStyle;
                     if (q.isNewFile) //меняем цвето строки если файл новый
                     {
-                        
+
                         defstyle.BackColor = Color.LightGreen;
-                        
-                    }else if((q.DateSource-q.DateTarget).TotalMinutes<3)//разница времени файлов меньше 3 минут
+
+                    }
+                    else if ((q.DateSource - q.DateTarget).TotalSeconds < 3)//разница времени файлов меньше 3 секунд
+                    {
                         defstyle.BackColor = Color.LightSkyBlue;
+                        q.Active = false;                           //если разница во времени <3c, то не отмечаем на копирование, скорее всего погрешность времени 
+                    }
                     dgv.Rows[i].DefaultCellStyle = defstyle;
+                    dgv.Rows[i].Cells["check"].Value = q.Active;
 
                 }
                 label1.Text = $"Total: {queues.Count()} files. \t\t New {queues.Count(c=>c.isNewFile)} files"; 
