@@ -40,13 +40,45 @@ namespace SyncFlash
             this.FormClosing += Form1_FormClosing;
             List_Projects.SelectedIndexChanged += List_Projects_SelectedIndexChanged;
             list_dirs.SelectedIndexChanged += List_dirs_SelectedIndexChanged;
+            list_dirs.DoubleClick += List_dirs_DoubleClick;
             checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
             CONSTS.AddNewLine(tblog,"USB-Flash: "+DriveLette);
             
         }
 
-        #region Events Handlers
 
+
+        #region Events Handlers
+        /// <summary>
+        /// открытие папки по двойному клику
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void List_dirs_DoubleClick(object sender, EventArgs e)
+        {
+            string selectedDir = "";
+            try
+            {
+                if (list_dirs.SelectedItems.Count == 0) return;
+                selectedDir = list_dirs.SelectedItems[0].Text;
+                if(Directory.Exists(selectedDir))
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+
+                    process.StartInfo.UseShellExecute = true;
+
+                    process.StartInfo.FileName = @"explorer";
+
+                    process.StartInfo.Arguments = selectedDir;
+
+                    process.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Opening folder "+selectedDir);
+            }
+        }
         //selected DIR
         private void List_dirs_SelectedIndexChanged(object sender, EventArgs e)
         {
