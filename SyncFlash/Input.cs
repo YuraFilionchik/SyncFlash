@@ -10,7 +10,8 @@ using System.Windows.Forms;
 namespace SyncFlash
 {
     public partial class Input : Form
-    { private string text = "";
+    {
+        private string text = "";
         public string TEXT
         {
             get
@@ -30,7 +31,7 @@ namespace SyncFlash
             if (e.KeyCode == Keys.Enter)
             {
                 text = textBox1.Text;
-                this.DialogResult = DialogResult.OK ;
+                this.DialogResult = DialogResult.OK;
                 Close();
             }
         }

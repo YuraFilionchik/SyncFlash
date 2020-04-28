@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SyncFlash
 {
-   public class Queue
+    public class Queue
     {
         /// <summary>
         /// Number of queue
@@ -31,7 +31,7 @@ namespace SyncFlash
             Count++;
             this.Active = true;
         }
-        public Queue( bool active, string source, string target,string srcProjDir,string targProjDir, DateTime dateS,DateTime dateT, bool isnew)
+        public Queue(bool active, string source, string target, string srcProjDir, string targProjDir, DateTime dateS, DateTime dateT, bool isnew)
         {
             Count++;
             this.Active = active;

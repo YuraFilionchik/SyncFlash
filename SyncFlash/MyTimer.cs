@@ -13,9 +13,9 @@ namespace SyncFlash
         readonly double MinDuration = 0.5;//минимальная длительность события для отображения в логе
         struct StartID
         {
-           public int id;
-           public string name;
-           public DateTime start;
+            public int id;
+            public string name;
+            public DateTime start;
         }
         List<StartID> startID;
         public MyTimer(LogForm Log)
@@ -30,14 +30,14 @@ namespace SyncFlash
             start = DateTime.Now;
             Name = name;
         }
-        public void Start(string name,int id)
+        public void Start(string name, int id)
         {
             if (startID.Any(x => x.id == id)) return;
-            startID.Add(new StartID 
+            startID.Add(new StartID
             {
                 id = id,
                 name = name,
-                start = DateTime.Now 
+                start = DateTime.Now
             });
         }
 
@@ -56,7 +56,7 @@ namespace SyncFlash
             var START = startID.First(x => x.id == id);
             var dt = DateTime.Now - START.start; //time of operation
             if (dt.TotalMilliseconds < MinDuration) return "";
-            string result = ">" + START.name + "\t\t-->\t" + PrepairString(dt) ;
+            string result = ">" + START.name + "\t\t-->\t" + PrepairString(dt);
             log.AddLine(result);
             startID.Remove(START);
             return result;

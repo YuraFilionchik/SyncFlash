@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Linq;
-using System.Xml.Linq;
-using System.Diagnostics;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace SyncFlash
-{ public static class CONSTS
+{
+    public static class CONSTS
     {
         public const string RootXMLProject = "Projects";
         public const string ProjXML = "Project";
@@ -19,7 +20,7 @@ namespace SyncFlash
         public const string PC_XML = "NetBios";
         public const string ExceptXML = "ExceptionDir";
         public const string FlashDrive = "FLASHDRIVE";
-        public  const string btSyncText1="StartSync";
+        public const string btSyncText1 = "StartSync";
         public const string btSyncText2 = "StopSync";
         public static void AddNewLine(DataGridView control, string text)
         {
@@ -30,15 +31,15 @@ namespace SyncFlash
             else
             {
                 int last = control.Rows.Count - 1;
-                var value = last>=0?control.Rows[last].Cells["data"].Value:null;
-                if (last>=0 && value!=null && value.ToString().Contains("Skipped"))
+                var value = last >= 0 ? control.Rows[last].Cells["data"].Value : null;
+                if (last >= 0 && value != null && value.ToString().Contains("Skipped"))
                 {//уже есть временная строка
-                    control.Invoke(new MethodInvoker(delegate()
+                    control.Invoke(new MethodInvoker(delegate ()
                     {
-                        
+
                     }));
                     if (control.InvokeRequired)
-                        control.Invoke(new MethodInvoker(delegate()
+                        control.Invoke(new MethodInvoker(delegate ()
                             { control.Rows[last].Cells["data"].Value = text; }));
                     else control.Rows[last].Cells["data"].Value = text;
                 }
@@ -46,27 +47,27 @@ namespace SyncFlash
                 {
                     int lastrow = 0;
                     if (control.InvokeRequired)
-                        control.Invoke(new MethodInvoker(delegate() { lastrow = control.Rows.Add(); }));
-                    else lastrow=control.Rows.Add();
-                if (control.InvokeRequired)
-                    control.Invoke(new MethodInvoker(delegate (){ control.Rows[lastrow].Cells["data"].Value = text; }));
-                else control.Rows[lastrow].Cells["data"].Value=text;
+                        control.Invoke(new MethodInvoker(delegate () { lastrow = control.Rows.Add(); }));
+                    else lastrow = control.Rows.Add();
+                    if (control.InvokeRequired)
+                        control.Invoke(new MethodInvoker(delegate () { control.Rows[lastrow].Cells["data"].Value = text; }));
+                    else control.Rows[lastrow].Cells["data"].Value = text;
                 }
 
                 int offset = 10;
                 if (control.RowCount > offset)
                 {
-                if( control.InvokeRequired)
-                    control.Invoke(new MethodInvoker(delegate ()
-                        { control.FirstDisplayedScrollingRowIndex = control.RowCount - offset; }));
-                else
-                   control.FirstDisplayedScrollingRowIndex=control.RowCount-offset;
+                    if (control.InvokeRequired)
+                        control.Invoke(new MethodInvoker(delegate ()
+                            { control.FirstDisplayedScrollingRowIndex = control.RowCount - offset; }));
+                    else
+                        control.FirstDisplayedScrollingRowIndex = control.RowCount - offset;
                 }
-                   
+
             }
 
         }
-       
+
         public static void AddToLastLine(DataGridView control, string text)
         {
             if (text == null)
@@ -91,12 +92,12 @@ namespace SyncFlash
             }
             else
             {
-                int last = control.Rows.Count-1;
+                int last = control.Rows.Count - 1;
                 var value = last >= 0 ? control.Rows[last].Cells["data"].Value : null;
-                if (last>=0 && value!=null && value.ToString().Contains("Skipped"))
+                if (last >= 0 && value != null && value.ToString().Contains("Skipped"))
                 {//already exist
                     if (control.InvokeRequired)
-                        control.Invoke(new MethodInvoker(delegate()
+                        control.Invoke(new MethodInvoker(delegate ()
                         {
                             control.Rows[last].Cells["data"].Value = "Skipped:\t" + text;
                         }));
@@ -104,21 +105,21 @@ namespace SyncFlash
                 }
                 else
                 {//add new templine
-                    AddNewLine(control,"Skipped:\t"+text);
+                    AddNewLine(control, "Skipped:\t" + text);
                 }
-                
+
 
             }
 
         }
-       
+
         public static void EnableButton(Button bt)
         {
-            
-                if (bt.InvokeRequired) bt.Invoke(new Action<string>(s => bt.Text=(s)), CONSTS.btSyncText1);
-                else bt.Text=CONSTS.btSyncText1;
-           // invokeEnableControl(bt,true);
-            
+
+            if (bt.InvokeRequired) bt.Invoke(new Action<string>(s => bt.Text = (s)), CONSTS.btSyncText1);
+            else bt.Text = CONSTS.btSyncText1;
+            // invokeEnableControl(bt,true);
+
 
         }
         public static void DisableButton(Button bt)
@@ -126,7 +127,7 @@ namespace SyncFlash
 
             if (bt.InvokeRequired) bt.Invoke(new Action<string>(s => bt.Text = (s)), CONSTS.btSyncText2);
             else bt.Text = CONSTS.btSyncText2;
-           // invokeEnableControl(bt, false);
+            // invokeEnableControl(bt, false);
 
 
         }
@@ -138,8 +139,8 @@ namespace SyncFlash
         }
         public static void invokeTBAppendText(TextBox tb, string text)
         {
-            if (tb.InvokeRequired) tb.Invoke(new Action<string>(s => tb.AppendText(s)), text+ "\r\n");
-            else tb.AppendText(text+ "\r\n");
+            if (tb.InvokeRequired) tb.Invoke(new Action<string>(s => tb.AppendText(s)), text + "\r\n");
+            else tb.AppendText(text + "\r\n");
         }
 
         public static void invokeTBClearText(TextBox tb)
@@ -149,8 +150,8 @@ namespace SyncFlash
         }
         public static void invokeEnableControl(Control control, bool enabled)
         {
-            if (control.InvokeRequired) control.Invoke(new Action<bool>(s => control.Enabled=s), enabled);
-            else control.Enabled=enabled;
+            if (control.InvokeRequired) control.Invoke(new Action<bool>(s => control.Enabled = s), enabled);
+            else control.Enabled = enabled;
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace SyncFlash
             return drive;
         }
     }
-   
+
     class configmanager
     {
         string Filepath; //Имя файла.
@@ -181,7 +182,7 @@ namespace SyncFlash
         private const string RootXMLProject = CONSTS.RootXMLProject;
         private const string ProjXML = CONSTS.ProjXML;
         private const string DirXML = CONSTS.DirXML;
-        
+
         #region inifile
         //[DllImport("kernel32", CharSet = CharSet.Unicode)] // Подключаем kernel32.dll и описываем его функцию WritePrivateProfilesString
         //static extern long WritePrivateProfileString(string Section, string Key, string Value, string FilePath);
@@ -260,18 +261,18 @@ namespace SyncFlash
                     doc = new XDocument(new XElement(RootXMLProject));
                     doc.Save(file);
                 }
-               
+
             }
-            catch(Exception)
+            catch (Exception)
             {
-                if(doc==null)
+                if (doc == null)
                 {
                     doc = new XDocument(new XElement(RootXMLProject));
                     doc.Save(file);
                 }
             }
             finally { Filepath = file; }
-           
+
         }
         public List<Project> ReadAllProjects()
         {
@@ -283,7 +284,7 @@ namespace SyncFlash
                             select new
                             {
                                 NAME = pr.Attribute("name")?.Value,
-                                AutoSync=pr.Attribute(CONSTS.AutoSync)?.Value,
+                                AutoSync = pr.Attribute(CONSTS.AutoSync)?.Value,
                                 Dirs = pr.Descendants(DirXML),
                                 ExcDirs = pr.Descendants(CONSTS.ExceptXML)
                             };
@@ -295,18 +296,18 @@ namespace SyncFlash
                     foreach (var e in project.ExcDirs)
                     {//Adding exceptions Dirs
                         string exDir = e.Attribute(CONSTS.AttDirName).Value.ToString(); //Exception DIR path from XML file
-                            p.ExceptionDirs.Add(exDir);
+                        p.ExceptionDirs.Add(exDir);
                     }
                     foreach (var d in project.Dirs)
                     {   //read directory for the project
-                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value.TrimEnd('\\'),p, d.Attribute(CONSTS.PC_XML).Value);
+                        var projDir = new Projdir(d.Attribute(CONSTS.AttDirName).Value.TrimEnd('\\'), p, d.Attribute(CONSTS.PC_XML).Value);
                         p.AllProjectDirs.Add(projDir);
-                     }
+                    }
                     Result.Add(p);
                 }
                 return Result;
             }
-            catch(Exception)
+            catch (Exception)
             { return Result; }
         }
         public void SaveProjects(IEnumerable<Project> projects)
@@ -318,17 +319,17 @@ namespace SyncFlash
             }
             foreach (var p in projects)
             {
-             SaveProject(p);
+                SaveProject(p);
             }
         }
-        private Project ClearDublicates(Project   p)
+        private Project ClearDublicates(Project p)
         {
             for (int i = 0; i < p.AllProjectDirs.Count; i++)
             {
                 var idir = p.AllProjectDirs[i];
                 if (p.AllProjectDirs.Count(x => x.Dir == idir.Dir) > 1)
                     p.AllProjectDirs.Remove(idir);
-               
+
             }
             return p;
         }
@@ -338,7 +339,7 @@ namespace SyncFlash
             {
                 File.Create(Filepath);
                 if (doc.Elements(RootXMLProject).Count() == 0)
-                    doc=new XDocument(new XElement(RootXMLProject));
+                    doc = new XDocument(new XElement(RootXMLProject));
             }
             ClearDublicates(project);
             var xp = project.ToXElement();
