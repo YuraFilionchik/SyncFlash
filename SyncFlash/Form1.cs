@@ -688,10 +688,10 @@ namespace SyncFlash
                 var selectedDir = list_dirs.SelectedItems;
                 if (selectedDir.Count == 0) return;
                 string SelectedDirPATH = selectedDir[0].Text;
-                if (DriveLette == SelectedDirPATH.Split('\\')[0])//FlashDrive
-                {
-                    SelectedDirPATH = GetRelationPath(SelectedDirPATH, DriveLette);
-                }
+                //if (DriveLette == SelectedDirPATH.Split('\\')[0])//FlashDrive
+                //{
+                //    SelectedDirPATH = GetRelationPath(SelectedDirPATH, DriveLette);
+                //}
                 var Project = Projects.First(x => x.Name == selected.ToString());
                 CopyDIRSThread = new Thread(delegate ()
                 {
@@ -749,7 +749,8 @@ namespace SyncFlash
             foreach (FileInfo file in files)
             {
                 string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, true);
+                try { file.CopyTo(temppath, true); }
+                catch (Exception) { continue; }
             }
 
             // If copying subdirectories, copy them and their contents to new location.
