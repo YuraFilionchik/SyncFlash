@@ -20,7 +20,8 @@ namespace SyncFlash
         string pc_name = Environment.MachineName;
         List<Project> Projects;
         private bool IsRunningSync=false; // if sync is running
-        Thread SyncThread;
+        Thread SyncThread; 
+        Thread CopyDIRSThread; //процесс принудительного копирования папки
         MyTimer tmr;
        public static LogForm log;
         public Form1()
@@ -113,11 +114,12 @@ namespace SyncFlash
         {
             if (button1.Text == CONSTS.btSyncText2)
             {
-                tmr.Start("Aborting process");
-                SyncThread.Abort();
+               // tmr.Start("Aborting process");
+                if(SyncThread!=null && SyncThread.IsAlive)SyncThread.Abort();
+                if (CopyDIRSThread!=null && CopyDIRSThread.IsAlive) CopyDIRSThread.Abort();
                 CONSTS.EnableButton(button1);
                 CONSTS.AddNewLine(tblog, "Прервано пользователем");
-                tmr.Stop();
+               // tmr.Stop();
                 return;
             }
             log.ClearLog();
@@ -157,7 +159,8 @@ namespace SyncFlash
                     int updatedfiles = 0;
                     int errorCopy = 0;
 
-                    var OnlineDirs = project.OnlineDirs;//.AllProjectDirs.Where(x => x.IsOnline); 
+                    var OnlineDirs = project.OnlineDirs.Where(x=>x.PC_Name==pc_name || x.PC_Name==CONSTS.FlashDrive);//.AllProjectDirs.Where(x => x.IsOnline); 
+                        
                     if (OnlineDirs.Count() == 0) { SetSyncStatus(false); return; }
                     if (OnlineDirs.Count() == 1)
                     {
@@ -642,30 +645,41 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
         /// <param name="e"></param>
         private void копироватьЭтуПапкуВОстальныеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selected = List_Projects.SelectedItem;
-            if (selected == null) return;
-            var selectedDir = list_dirs.SelectedItems;
-            if (selectedDir.Count == 0) return;
-            string SelectedDirPATH = selectedDir[0].Text;
-            if (DriveLette == SelectedDirPATH.Split('\\')[0])//FlashDrive
+            try
             {
-                SelectedDirPATH = GetRelationPath(SelectedDirPATH, DriveLette);
+                var selected = List_Projects.SelectedItem;
+                if (selected == null) return;
+                var selectedDir = list_dirs.SelectedItems;
+                if (selectedDir.Count == 0) return;
+                string SelectedDirPATH = selectedDir[0].Text;
+                if (DriveLette == SelectedDirPATH.Split('\\')[0])//FlashDrive
+                {
+                    SelectedDirPATH = GetRelationPath(SelectedDirPATH, DriveLette);
+                }
+                var Project = Projects.First(x => x.Name == selected.ToString());
+                CopyDIRSThread = new Thread(delegate ()
+                {
+                    CONSTS.invokeProgress(progressBar1, 0);
+                    CONSTS.DisableButton(button1); // кнопку старт в активный режим
+                    CONSTS.AddNewLine(tblog, "Проект " + Project.Name + ". Принудительное копирование " + SelectedDirPATH);
+                    foreach (Projdir onlineDir in Project.OnlineDirs)
+                    {
+                        if (onlineDir.Dir == SelectedDirPATH) continue;
+                        //copy selected Dir into others
+                        DirectoryCopy(SelectedDirPATH, onlineDir.Dir, true);
+                        CONSTS.AddNewLine(tblog, SelectedDirPATH + " } ---> {" + onlineDir.Dir);
+                    }
+                    CONSTS.AddNewLine(tblog, $"\t\tГотово. Выбранная папка скопирована в {(Project.OnlineDirs.Count()-1)} другие папки."); ;
+                    CONSTS.EnableButton(button1); // кнопку старт в обычный режим
+                });
+                CopyDIRSThread.Start();
             }
-            var Project = Projects.First(x => x.Name == selected.ToString());
-            Thread CopyDIRSThread = new Thread(delegate ()
+            catch ( Exception ex)
             {
+                MessageBox.Show(ex.Message, "ForceCopy");
+                CONSTS.AddNewLine(tblog, "\t\tПроцесс копирования прерван.");
+            }
                
-                CONSTS.AddNewLine(tblog, "Проект " + Project.Name+". Принудительное копирование "+SelectedDirPATH);
-                foreach (Projdir onlineDir in Project.OnlineDirs)
-            {
-                if (onlineDir.Dir == SelectedDirPATH) continue;
-                //copy selected Dir into others
-                DirectoryCopy(SelectedDirPATH, onlineDir.Dir, true);
-                    CONSTS.AddNewLine(tblog, SelectedDirPATH+" } ---> {"+onlineDir.Dir );
-            }
-                CONSTS.AddNewLine(tblog, "\t\tГотово.");
-            });
-            CopyDIRSThread.Start();
             
 
         }
@@ -697,7 +711,7 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
             // Get the files in the directory and copy them to the new location.
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
-            {
+            { 
                 string temppath = Path.Combine(destDirName, file.Name);
                 file.CopyTo(temppath, true);
             }
@@ -716,6 +730,11 @@ var projAuto = Projects.Where(x => x.AutoSync);//All autosync projects
         private void обновитьСписокПроектовToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Projects = cfg.ReadAllProjects();
+        }
+
+        private void CheckBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
