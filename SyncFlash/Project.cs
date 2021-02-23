@@ -11,6 +11,7 @@ namespace SyncFlash
 {
     class Project
     {
+        private MyTimer timer = new MyTimer(Form1.log);
         public List<Projdir> AllProjectDirs; //список всех папок для синхронизации
         public List<string> ExceptionDirs; //папки исключения
         public List<Projdir> OnlineDirs//доступные сейчас
@@ -49,7 +50,9 @@ namespace SyncFlash
 
         public void RemoveDir(string dir)
         {
+            timer.Start("removeing dir", 1);
             if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(GetProjDirFromString(dir));
+            timer.Stop(1);
         }
 
         //возвращает тип Project по названию папки
@@ -133,7 +136,9 @@ namespace SyncFlash
         {
             get
             {
+                tmr.Start("Checking isOnline: "+Dir, 2);
                 return Directory.Exists(Dir);
+                tmr.Stop(2);
             }
         }
         private filesdates _allfiles;
@@ -162,16 +167,20 @@ namespace SyncFlash
         public KeyValuePair<string, DateTime> FindFile(string relateFilePath)
         {
             string ABSpath = Dir + relateFilePath;
-            //tmr.Start("===Find file " + ABSpath, 12);
+            tmr.Start("===Find file " + ABSpath, 12);
             foreach (var file in AllFiles())
             {
+                tmr.Start("looking " + file.Key, 100);
                 // if (Form1.GetRelationPath(file.Key, Dir) == relateFilePath)
                 if (file.Key == ABSpath)
                 {
-                    // tmr.Stop(12);
-                    tmr.AddLine("Find file " + ABSpath);
+                     tmr.Stop(100);
+                    tmr.Stop(12);
+                   // tmr.AddLine("Find file " + ABSpath);
                     return file;
                 }
+                tmr.Stop(100);
+
             }
             tmr.Stop(12);
             return new KeyValuePair<string, DateTime>();
@@ -232,20 +241,25 @@ namespace SyncFlash
         }
         private string[] GetfilesIndir(string dir)
         {
+            tmr.Start("looking DIR: "+dir,99);
             string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;//относительный путь
             var result = new string[0];
             if (FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
-                return result;
-            if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);//file in root dir
+            { tmr.Stop(99); return result; }
+            if (Directory.GetDirectories(dir).Count() == 0)
+            { tmr.Stop(99); return Directory.GetFiles(dir); }//file in root dir
 
             else
             {
                 result = result.Concat(Directory.GetFiles(dir)).ToArray();
                 foreach (var D in Directory.GetDirectories(dir))
                 {
+                    tmr.Start("looking DIR: " + D, 98);
                     result = result.Concat(GetfilesIndir(D)).ToArray();
+                    tmr.Stop(98);
                 }
             }
+            tmr.Stop(99);
             return result;
         }
         /// <summary>

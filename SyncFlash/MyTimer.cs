@@ -10,7 +10,7 @@ namespace SyncFlash
         private DateTime start;
         public string Name;
         LogForm log;
-        readonly double MinDuration = 0.5;//минимальная длительность события для отображения в логе
+        readonly double MinDuration = 5.5;//минимальная длительность события для отображения в логе
         struct StartID
         {
             public int id;
@@ -31,7 +31,7 @@ namespace SyncFlash
             Name = name;
         }
         public void Start(string name, int id)
-        {
+        {if (!log.Visible) return;
             if (startID.Any(x => x.id == id)) return;
             startID.Add(new StartID
             {
@@ -44,6 +44,7 @@ namespace SyncFlash
         //return name and duration of operation
         public string Stop()
         {
+            if (!log.Visible) return "";
             var dt = DateTime.Now - start; //time of operation
             if (dt.TotalMilliseconds < MinDuration) return "";
             string result = ">" + Name + "\t\t-->\t" + PrepairString(dt);
@@ -52,6 +53,7 @@ namespace SyncFlash
         }
         public string Stop(int id)
         {
+            if (!log.Visible) return "";
             if (!startID.Any(x => x.id == id)) return "Error ID timer";
             var START = startID.First(x => x.id == id);
             var dt = DateTime.Now - START.start; //time of operation
@@ -62,7 +64,7 @@ namespace SyncFlash
             return result;
         }
         public void AddLine(string text)
-        {
+        { 
             string result = ">" + text;
             log.AddLine(result);
         }

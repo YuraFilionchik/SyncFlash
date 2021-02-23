@@ -337,7 +337,6 @@
             // btLog
             // 
             this.btLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btLog.Enabled = false;
             this.btLog.Location = new System.Drawing.Point(609, 2);
             this.btLog.Name = "btLog";
             this.btLog.Size = new System.Drawing.Size(24, 23);
