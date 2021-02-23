@@ -14,15 +14,15 @@ namespace SyncFlash
         public LogForm()
         {
             InitializeComponent();
-          
+
         }
 
-   
+
 
         public void ClearLog()
-            {
+        {
             CONSTS.invokeTBClearText(textBox1);// textBox1.Clear();
-            }
+        }
 
         public void AddLine(string text)
         {

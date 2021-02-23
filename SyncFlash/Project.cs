@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Collections;
-using filesdates = System.Collections.Generic.Dictionary<string, System.DateTime>;
 using System.Xml.Linq;
+using filesdates = System.Collections.Generic.Dictionary<string, System.DateTime>;
 
 namespace SyncFlash
 {
@@ -113,47 +113,53 @@ namespace SyncFlash
         }
         public string Dir
         {
-            get {
+            get
+            {
                 if (PC_Name == CONSTS.FlashDrive) //если флешка, то добавит букву диска
                     return (CONSTS.GetDriveLetter() + _dir);
                 else return _dir;
             }
-            set { if(CONSTS.FlashDrive==PC_Name)//если флешка
-                { var seg = value.Split('\\')[0];
+            set
+            {
+                if (CONSTS.FlashDrive == PC_Name)//если флешка
+                {
+                    var seg = value.Split('\\')[0];
                     _dir = value.Substring(seg.Length);//сохраняем без буквы диска
                 }
-                    else _dir = value;
+                else _dir = value;
             }
         }
         public bool IsOnline
         {
-            get {
-                return Directory.Exists(Dir); }
+            get
+            {
+                return Directory.Exists(Dir);
+            }
         }
         private filesdates _allfiles;
 
-        private DateTime DefaultDate= new DateTime(2000, 1, 1);
-        public Projdir(string dir,Project project)
+        private DateTime DefaultDate = new DateTime(2000, 1, 1);
+        public Projdir(string dir, Project project)
         {
             Dir = dir;
-            pc_name= System.Environment.MachineName;
+            pc_name = System.Environment.MachineName;
             FromProject = project;
             tmr = new MyTimer(Form1.log);
         }
-        public Projdir(string dir,Project project, string pc)
+        public Projdir(string dir, Project project, string pc)
         {
             Dir = dir;
             pc_name = pc;
             FromProject = project;
             tmr = new MyTimer(Form1.log);
         }
-        
+
         /// <summary>
         /// Поиск файла и даты в списке всех файлов
         /// </summary>
         /// <param name="relateFilePath"></param>
         /// <returns></returns>
-        public KeyValuePair<string,DateTime> FindFile(string relateFilePath)
+        public KeyValuePair<string, DateTime> FindFile(string relateFilePath)
         {
             string ABSpath = Dir + relateFilePath;
             //tmr.Start("===Find file " + ABSpath, 12);
@@ -168,14 +174,14 @@ namespace SyncFlash
                 }
             }
             tmr.Stop(12);
-            return new KeyValuePair<string, DateTime>() ;
+            return new KeyValuePair<string, DateTime>();
         }
         /// <summary>
         /// Dictionary<files,datetime last write> всех файлов в Projdir
         /// </summary>
-        public  filesdates AllFiles()
+        public filesdates AllFiles()
         {
-            if (!IsOnline) {   return new filesdates(); }
+            if (!IsOnline) { return new filesdates(); }
             //List<string> files1 = new List<string>();//all files in Dir
             //files1.AddRange(Directory.GetFiles(Dir));//all files in Dir
             //string[] subdirs = Directory.GetDirectories(Dir);//all dirs in Dir
@@ -187,26 +193,26 @@ namespace SyncFlash
             //    }
             //чтение всех файлов проекта, кроме исключений
             filesdates res = new filesdates();
-            
+
             string[] AllFiles;
             if (_allfiles == null)
-            { 
+            {
                 tmr.Start("===GetFilesInDir " + Dir, 22);
                 AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
                 tmr.Stop(22);
             }
-            else  return _allfiles; 
-            var n=AllFiles.Count();
+            else return _allfiles;
+            var n = AllFiles.Count();
             //tmr.Stop(22);
-           // tmr.Start("Перевод в структуру filesdates ",23);
+            // tmr.Start("Перевод в структуру filesdates ",23);
             foreach (var file in AllFiles)
-                {
-                    res.Add(file, File.GetLastWriteTime(file));
-                }
-           // tmr.Stop(23);
+            {
+                res.Add(file, File.GetLastWriteTime(file));
+            }
+            // tmr.Stop(23);
             _allfiles = res;
-                return res;
-            
+            return res;
+
         }
         public void ReadFiles()
         {
@@ -214,21 +220,21 @@ namespace SyncFlash
             filesdates res = new filesdates();
 
             string[] AllFiles;
-                           
-                AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
-                              
-           foreach (var file in AllFiles)
+
+            AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
+
+            foreach (var file in AllFiles)
             {
                 res.Add(file, File.GetLastWriteTime(file));
             }
-           
+
             _allfiles = res;
         }
         private string[] GetfilesIndir(string dir)
         {
             string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;//относительный путь
             var result = new string[0];
-            if ( FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
+            if (FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
                 return result;
             if (Directory.GetDirectories(dir).Count() == 0) return Directory.GetFiles(dir);//file in root dir
 
@@ -293,10 +299,10 @@ namespace SyncFlash
         public List<string> Info2()
         {
             var res = new List<string>();
-            
+
             if (IsOnline) res.Add("ONLINE == " + Dir); else res.Add("OFFLINE == " + Dir);
             if (LastMod == DefaultDate) res.Add("Dir Last Modif.: недоступно");
-            else res.Add("Самый свежий файл: "+LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
+            else res.Add("Самый свежий файл: " + LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
             res.Add("Файлов \t:" + AllFiles().Count);
             return res;
         }
@@ -305,7 +311,7 @@ namespace SyncFlash
             var res = new List<string>();
 
             if (IsOnline) res.Add("ONLINE == " + Dir); else res.Add("OFFLINE == " + Dir);
-           // if (LastMod == DefaultDate) res.Add("Dir Last Modif.: недоступно");
+            // if (LastMod == DefaultDate) res.Add("Dir Last Modif.: недоступно");
             //else res.Add("Dir Last Modif.: " + LastMod.ToString("dd.MM.yyyy HH:mm:ss"));
             //res.Add("Файлов \t:" + AllFiles.Count);
             return res;
@@ -324,6 +330,6 @@ namespace SyncFlash
     //    {
     //        Files.Add(SourceFilePath, DestFilePath);
     //    }
-        
+
     //}
 }

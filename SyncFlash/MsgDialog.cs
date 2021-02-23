@@ -11,15 +11,15 @@ namespace SyncFlash
 {
     public partial class MsgDialog : Form
     {
-       public List<Queue> ReturnedQueue;
+        public List<Queue> ReturnedQueue;
         public List<Queue> ExceptionsList = new List<Queue>();
         private bool AddExceptions = false;
-        
+
         public MsgDialog(List<Queue> queues)
         {
             try
             {
-InitializeComponent();
+                InitializeComponent();
                 dgv.SelectionChanged += Dgv_SelectionChanged;
                 ReturnedQueue = queues;
                 //Fill datagridview
@@ -29,8 +29,8 @@ InitializeComponent();
             {
                 MessageBox.Show(ex.Message, "MsgDialog");
             }
-            
-            
+
+
         }
         /// <summary>
         /// Вывод очереди в таблицу datagridview
@@ -81,7 +81,7 @@ InitializeComponent();
         /// <param name="e"></param>
         private void Dgv_SelectionChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -94,15 +94,15 @@ InitializeComponent();
             try
             {
                 //add exceptions
-                if(AddExceptions)
+                if (AddExceptions)
                 {
                     configmanager cfg = new configmanager(Form1.cfg_file); //manager of file config
                     var Projects = cfg.ReadAllProjects();
                     var pr = Projects.First(x => x.Alldirs.Any(c => c.Contains(ExceptionsList[0].SourceFileProjectDir))); //selected proj
                     foreach (Queue q in ExceptionsList)
                     {
-                        string relpath = Form1.GetRelationPath(q.SourceFile,q.SourceFileProjectDir);
-                        if (pr.ExceptionDirs.Contains(relpath)) continue ;
+                        string relpath = Form1.GetRelationPath(q.SourceFile, q.SourceFileProjectDir);
+                        if (pr.ExceptionDirs.Contains(relpath)) continue;
                         pr.ExceptionDirs.Add(relpath);//добавление относительного пути
                         _ = ReturnedQueue.Remove(q);
                     }
@@ -114,7 +114,7 @@ InitializeComponent();
                     if (!(bool)row.Cells["check"].Value)
                     {
                         Queue q = ReturnedQueue.Find(x => x.Number == (int)row.Cells["Number"].Value);
-                       if(q!=null) ReturnedQueue.Remove(q);
+                        if (q != null) ReturnedQueue.Remove(q);
                     }
                 }
                 this.DialogResult = DialogResult.OK;
@@ -169,7 +169,7 @@ InitializeComponent();
                 int Number = (int)selectedrow.Cells["Number"].Value;//number of selected queue
                 Queue selectedQueue = ReturnedQueue.Find(x => x.Number == Number);
                 if (selectedQueue.isNewFile) return;
-                string oldsourceFile=selectedQueue.SourceFile;
+                string oldsourceFile = selectedQueue.SourceFile;
                 string oldsourceDir = selectedQueue.SourceFileProjectDir;
                 DateTime oldsourceDate = selectedQueue.DateSource;
                 selectedQueue.SourceFile = selectedQueue.TargetFile;
@@ -196,7 +196,7 @@ InitializeComponent();
                 int Number = (int)selectedrow.Cells["Number"].Value;//number of selected queue
                 Queue selectedQueue = ReturnedQueue.Find(x => x.Number == Number);
                 System.IO.File.Delete(selectedQueue.SourceFile);
-                if(!selectedQueue.isNewFile)
+                if (!selectedQueue.isNewFile)
                 {
                     System.IO.File.Delete(selectedQueue.TargetFile);
                 }
