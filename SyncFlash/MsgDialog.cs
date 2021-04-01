@@ -96,7 +96,7 @@ namespace SyncFlash
                 //add exceptions
                 if (AddExceptions)
                 {
-                    configmanager cfg = new configmanager(Form1.cfg_file); //manager of file config
+                    var cfg =Form1.cfg; //manager of file config
                     var Projects = cfg.ReadAllProjects();
                     var pr = Projects.First(x => x.Alldirs.Any(c => c.Contains(ExceptionsList[0].SourceFileProjectDir))); //selected proj
                     foreach (Queue q in ExceptionsList)

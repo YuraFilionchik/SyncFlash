@@ -175,7 +175,7 @@ namespace SyncFlash
         }
     }
 
-    class configmanager
+ public   class configmanager
     {
         string Filepath; //Имя файла.
         private XDocument doc;

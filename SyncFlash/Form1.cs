@@ -14,7 +14,6 @@ namespace SyncFlash
 {
     public partial class Form1 : Form
     {
-        configmanager cfg;
         public string DriveLette;
         public const string cfg_file = "conf.ini";
         string pc_name = Environment.MachineName;
@@ -23,6 +22,7 @@ namespace SyncFlash
         Thread SyncThread; 
         Thread CopyDIRSThread; //процесс принудительного копирования папки
         MyTimer tmr;
+        public static configmanager cfg;
         public static LogForm log;
         public Form1()
         { //TODO SYNC SOME PROJECTS 
@@ -167,7 +167,7 @@ namespace SyncFlash
             if (List_Projects.SelectedItems.Count != 1) return;
             var selectedProj = Projects.FirstOrDefault(x => x.Name == List_Projects.SelectedItem.ToString());
             if (selectedProj != null) selectedProj.AutoSync = checkBox2.Checked;
-            SaveAllProjects();
+            //SaveAllProjects();
         }
         #endregion
 
@@ -231,12 +231,12 @@ namespace SyncFlash
                                 foreach (var dateFile in Dir.AllFiles())
                                 {
                                     //получаем относительный путь файла
-                                    string relatePath = GetRelationPath(dateFile.Key, Dir.Dir);
+                                     string relatePath = GetRelationPath(dateFile.Key, Dir.Dir);
                                     //проверялся ли такой файл раньше?
                                     if (skippedFiles.Contains(relatePath)) continue; // ДА - пропускаем
                                                                                      //проверяем, нет ли такого файла уже в очереди 
                                                                                      //поиск файла в очереди
-                                    if (queue.Any(x => x.SourceFile.Contains(relatePath))) continue; //dataFile.Key - Full filePath
+                                    if (queue.Any(x => x.SourceFile.EndsWith(relatePath))) continue; //dataFile.Key - Full filePath
 
                                     var newest = dateFile; //самый свежий файл
                                     string SrcDir = Dir.Dir;
@@ -402,7 +402,7 @@ namespace SyncFlash
                             CONSTS.AddNewLine(tblog, "Всего скопировано: \t" + cTotal.ToString());
                             CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
-                            Projects = cfg.ReadAllProjects();
+                           // Projects = cfg.ReadAllProjects();
 
                         }
 
@@ -475,7 +475,7 @@ namespace SyncFlash
                 List_Projects.Items.Add(input.TEXT);
                 var proj = new Project(input.TEXT);
                 Projects.Add(proj);
-                SaveAllProjects();
+                //SaveAllProjects();
             }
         }
 
@@ -496,7 +496,7 @@ namespace SyncFlash
 
             Projects.First(x => x.Name == selectedProj).Name = inputDialog.TEXT;
             List_Projects.Items[List_Projects.SelectedIndex] = inputDialog.TEXT;
-            SaveAllProjects();
+            //SaveAllProjects();
 
         }
         private void синхронизироватьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -526,7 +526,7 @@ namespace SyncFlash
                 p.AllProjectDirs.Add(new Projdir(inputDir, p));
             }
 
-            SaveAllProjects();
+           // SaveAllProjects();
         }
 
         private void удалитьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
@@ -536,13 +536,14 @@ namespace SyncFlash
             var selectedDir = list_dirs.SelectedItems;
             if (selectedDir.Count == 0) return;
             string DirRemove = selectedDir[0].Text;
-            if (DriveLette == DirRemove.Split('\\')[0])//FlashDrive
-            {
-                DirRemove = GetRelationPath(DirRemove, DriveLette);
-            }
-            Projects.First(x => x.Name == selected.ToString()).RemoveDir(DirRemove);
+            //if (DriveLette == DirRemove.Split('\\')[0])//FlashDrive
+            //{
+            //    DirRemove = GetRelationPath(DirRemove, DriveLette);
+            //}
+            var proj = Projects.First(x => x.Name == selected.ToString());
+            if(proj!=null)proj.RemoveDir(DirRemove);
             list_dirs.Items.Remove(selectedDir[0]);
-            SaveAllProjects();
+           // SaveAllProjects();
         }
 
         private void удалитьПроектToolStripMenuItem_Click(object sender, EventArgs e)
@@ -551,7 +552,7 @@ namespace SyncFlash
             if (selected == null) return;
             Projects.Remove(Projects.First(x => x.Name == selected.ToString()));
             List_Projects.Items.Remove(selected);
-            SaveAllProjects();
+          //  SaveAllProjects();
         }
         //Add Except Dir
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -580,7 +581,7 @@ namespace SyncFlash
             pr.ExceptionDirs.Add(relpath);//добавление относительного пути
             listExceptions.Items.Clear();
             listExceptions.Items.AddRange(pr.ExceptionDirs.ToArray());
-            SaveAllProjects();
+            //SaveAllProjects();
         }
 
         //remove Except dir
@@ -604,7 +605,7 @@ namespace SyncFlash
             pr.ExceptionDirs.Remove(selExc);
             listExceptions.Items.Clear();
             listExceptions.Items.AddRange(pr.ExceptionDirs.ToArray());
-            SaveAllProjects();
+         //   SaveAllProjects();
         }
         #endregion
 
