@@ -92,14 +92,26 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queue.cs" />
+    <EmbeddedResource Include="Form1.en.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.ru.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Input.en.resx">
+      <DependentUpon>Input.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Input.resx">
       <DependentUpon>Input.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MsgDialog.en.resx">
+      <DependentUpon>MsgDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MsgDialog.resx">
       <DependentUpon>MsgDialog.cs</DependentUpon>

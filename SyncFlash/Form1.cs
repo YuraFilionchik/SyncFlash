@@ -314,6 +314,7 @@ namespace SyncFlash
                                 var msgBox = new MsgDialog(queue);
                                 var dr = msgBox.ShowDialog();
                                 if (dr != DialogResult.OK) { SetSyncStatus(false); return; }
+                                else queue = msgBox.ReturnedQueue;
                             }
 
                             CONSTS.AddNewLine(tblog, "--------------------------------------------");
@@ -344,9 +345,9 @@ namespace SyncFlash
                                         {
                                             //update file
                                             var size = new FileInfo(SrcFile).Length;
-                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "Обновленный :> " + SrcFile +
+                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "Updated :> " + SrcFile +
                                                 "\t(" + ((double)size / 1000) + "kbit)");
-                                            CONSTS.AddToTempLine(tblog, "   Запуск  :> " + SrcFile + " ==>" + DstFile);
+                                            CONSTS.AddToTempLine(tblog, "   Copy  :> " + SrcFile + " ==>" + DstFile);
                                             System.IO.File.Copy(SrcFile, DstFile, true);
                                             CONSTS.AddNewLine(tblog, "   Updated :> " + DstFile);
                                             nUpd++;
@@ -372,9 +373,9 @@ namespace SyncFlash
                                         {
 
                                             var size = new FileInfo(SrcFile).Length;
-                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "Новый :> " + SrcFile +
+                                            CONSTS.AddNewLine(tblog, filesCount.ToString() + "). " + "New :> " + SrcFile +
                                                 "\t(" + ((double)size / 1000) + "kbit)");
-                                            CONSTS.AddToTempLine(tblog, "   Запуск  :> " + SrcFile + " ==>" + DstFile);
+                                            CONSTS.AddToTempLine(tblog, "   Copy  :> " + SrcFile + " ==>" + DstFile);
                                             System.IO.File.Copy(SrcFile, DstFile, true);
                                             CONSTS.AddNewLine(tblog, "   Copied  :> " + DstFile);
                                             nNew++;
@@ -395,11 +396,11 @@ namespace SyncFlash
 
                             CONSTS.AddNewLine(tblog, "--------------------------------");
                             CONSTS.AddNewLine(tblog, project.Name + " синхронизирован.");
-                            CONSTS.AddNewLine(tblog, "Новых файлов: \t\t" + nNew.ToString());
-                            CONSTS.AddNewLine(tblog, "Обновлено файлов:  \t" + nUpd.ToString());
-                            CONSTS.AddNewLine(tblog, "Всего исходных файлов:\t" + cTotal.ToString());
-                            CONSTS.AddNewLine(tblog, "Всего скопировано: \t" + cTotal.ToString());
-                            CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
+                            CONSTS.AddNewLine(tblog, "Новых файлов(new files): \t\t" + nNew.ToString());
+                            CONSTS.AddNewLine(tblog, "Обновлено файлов(updated files):  \t" + nUpd.ToString());
+                            CONSTS.AddNewLine(tblog, "Всего исходных файлов(total source):\t" + cTotal.ToString());
+                            CONSTS.AddNewLine(tblog, "Всего скопировано(copied): \t" + cTotal.ToString());
+                            CONSTS.AddNewLine(tblog, "Ошибок копирования(errors):\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
                             // Projects = cfg.ReadAllProjects();
 
@@ -770,6 +771,11 @@ namespace SyncFlash
         }
 
         private void CheckBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbSilent_CheckedChanged(object sender, EventArgs e)
         {
 
         }

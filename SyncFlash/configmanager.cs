@@ -20,8 +20,8 @@ namespace SyncFlash
         public const string PC_XML = "NetBios";
         public const string ExceptXML = "ExceptionDir";
         public const string FlashDrive = "FLASHDRIVE";
-        public const string btSyncText1 = "StartSync";
-        public const string btSyncText2 = "StopSync";
+        public const string btSyncText1 = "Start Sync";
+        public const string btSyncText2 = "Stop Sync";
         public static void AddNewLine(DataGridView control, string text)
         {
             if (text == null)

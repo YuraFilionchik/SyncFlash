@@ -209,5 +209,11 @@ namespace SyncFlash
                 MessageBox.Show(ex.Message, "Удаление выбранного файла");
             }
         }
+
+        private void cbfilter_CheckedChanged(object sender, EventArgs e)
+        {
+                for (int i = 0; i < dgv.Rows.Count; i++)  //make visible only checked rows
+                    dgv.Rows[i].Visible = !cbfilter.Checked || (bool)dgv.Rows[i].Cells["check"].EditedFormattedValue;
+        }
     }
 }
