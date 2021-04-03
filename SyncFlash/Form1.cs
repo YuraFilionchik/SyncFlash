@@ -18,8 +18,8 @@ namespace SyncFlash
         public const string cfg_file = "conf.ini";
         string pc_name = Environment.MachineName;
         List<Project> Projects;
-        private bool IsRunningSync=false; // if sync is running
-        Thread SyncThread; 
+        private bool IsRunningSync = false; // if sync is running
+        Thread SyncThread;
         Thread CopyDIRSThread; //процесс принудительного копирования папки
         MyTimer tmr;
         public static configmanager cfg;
@@ -153,7 +153,7 @@ namespace SyncFlash
                 if (CopyDIRSThread != null && CopyDIRSThread.IsAlive) CopyDIRSThread.Abort();
                 CONSTS.EnableButton(button1);
                 CONSTS.AddNewLine(tblog, "Прервано пользователем");
-               // tmr.Stop();
+                // tmr.Stop();
                 return;
             }
             log.ClearLog();
@@ -193,11 +193,11 @@ namespace SyncFlash
                         int updatedfiles = 0;
                         int errorCopy = 0;
 
-                    var OnlineDirs = project.OnlineDirs.Where(x=>x.PC_Name==pc_name || x.PC_Name==CONSTS.FlashDrive);//.AllProjectDirs.Where(x => x.IsOnline); 
-                        
-                    if (OnlineDirs.Count() == 0) { SetSyncStatus(false); return; }
-                    if (OnlineDirs.Count() == 1)
-                    {
+                        var OnlineDirs = project.OnlineDirs.Where(x => x.PC_Name == pc_name || x.PC_Name == CONSTS.FlashDrive);//.AllProjectDirs.Where(x => x.IsOnline); 
+
+                        if (OnlineDirs.Count() == 0) { SetSyncStatus(false); return; }
+                        if (OnlineDirs.Count() == 1)
+                        {
 
                             foreach (var t in OnlineDirs.First().Info2())
                             {
@@ -231,7 +231,7 @@ namespace SyncFlash
                                 foreach (var dateFile in Dir.AllFiles())
                                 {
                                     //получаем относительный путь файла
-                                     string relatePath = GetRelationPath(dateFile.Key, Dir.Dir);
+                                    string relatePath = GetRelationPath(dateFile.Key, Dir.Dir);
                                     //проверялся ли такой файл раньше?
                                     if (skippedFiles.Contains(relatePath)) continue; // ДА - пропускаем
                                                                                      //проверяем, нет ли такого файла уже в очереди 
@@ -241,7 +241,6 @@ namespace SyncFlash
                                     var newest = dateFile; //самый свежий файл
                                     string SrcDir = Dir.Dir;
                                     //создаем список файлов, которые нужно заменить файлом dateFile, файл назначения
-                                    //TODO create new structure
                                     // Dictionary<string, DateTime> otherFiles = new Dictionary<string, DateTime>();
 
                                     List<Tuple<string, string, DateTime, bool>> otherFiles = new List<Tuple<string, string, DateTime, bool>>();
@@ -402,7 +401,7 @@ namespace SyncFlash
                             CONSTS.AddNewLine(tblog, "Всего скопировано: \t" + cTotal.ToString());
                             CONSTS.AddNewLine(tblog, "Ошибок копирования:\t" + errorCopy.ToString());
                             CONSTS.EnableButton(button1);
-                           // Projects = cfg.ReadAllProjects();
+                            // Projects = cfg.ReadAllProjects();
 
                         }
 
@@ -526,7 +525,7 @@ namespace SyncFlash
                 p.AllProjectDirs.Add(new Projdir(inputDir, p));
             }
 
-           // SaveAllProjects();
+            // SaveAllProjects();
         }
 
         private void удалитьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
@@ -541,9 +540,9 @@ namespace SyncFlash
             //    DirRemove = GetRelationPath(DirRemove, DriveLette);
             //}
             var proj = Projects.First(x => x.Name == selected.ToString());
-            if(proj!=null)proj.RemoveDir(DirRemove);
+            if (proj != null) proj.RemoveDir(DirRemove);
             list_dirs.Items.Remove(selectedDir[0]);
-           // SaveAllProjects();
+            // SaveAllProjects();
         }
 
         private void удалитьПроектToolStripMenuItem_Click(object sender, EventArgs e)
@@ -552,7 +551,7 @@ namespace SyncFlash
             if (selected == null) return;
             Projects.Remove(Projects.First(x => x.Name == selected.ToString()));
             List_Projects.Items.Remove(selected);
-          //  SaveAllProjects();
+            //  SaveAllProjects();
         }
         //Add Except Dir
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -605,7 +604,7 @@ namespace SyncFlash
             pr.ExceptionDirs.Remove(selExc);
             listExceptions.Items.Clear();
             listExceptions.Items.AddRange(pr.ExceptionDirs.ToArray());
-         //   SaveAllProjects();
+            //   SaveAllProjects();
         }
         #endregion
 
@@ -706,18 +705,18 @@ namespace SyncFlash
                         DirectoryCopy(SelectedDirPATH, onlineDir.Dir, true);
                         CONSTS.AddNewLine(tblog, SelectedDirPATH + " } ---> {" + onlineDir.Dir);
                     }
-                    CONSTS.AddNewLine(tblog, $"\t\tГотово. Выбранная папка скопирована в {(Project.OnlineDirs.Count()-1)} другие папки."); ;
+                    CONSTS.AddNewLine(tblog, $"\t\tГотово. Выбранная папка скопирована в {(Project.OnlineDirs.Count() - 1)} другие папки."); ;
                     CONSTS.EnableButton(button1); // кнопку старт в обычный режим
                 });
                 CopyDIRSThread.Start();
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "ForceCopy");
                 CONSTS.AddNewLine(tblog, "\t\tПроцесс копирования прерван.");
             }
-               
-            
+
+
 
         }
         /// <summary>
@@ -748,7 +747,7 @@ namespace SyncFlash
             // Get the files in the directory and copy them to the new location.
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
-            { 
+            {
                 string temppath = Path.Combine(destDirName, file.Name);
                 try { file.CopyTo(temppath, true); }
                 catch (Exception) { continue; }

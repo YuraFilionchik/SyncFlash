@@ -174,19 +174,22 @@ namespace SyncFlash
             return drive;
         }
         private static string _driveletter;
-        public static string DriveLetter { 
-            get {
+        public static string DriveLetter
+        {
+            get
+            {
                 if (String.IsNullOrWhiteSpace(_driveletter)) return GetDriveLetter();
                 else return _driveletter;
             }
-            set {
+            set
+            {
                 _driveletter = value;
             }
         }
 
     }
 
- public   class configmanager
+    public class configmanager
     {
         string Filepath; //Имя файла.
         private XDocument doc;

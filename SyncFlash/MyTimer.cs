@@ -31,7 +31,8 @@ namespace SyncFlash
             Name = name;
         }
         public void Start(string name, int id)
-        {if (!log.Visible) return;
+        {
+            if (!log.Visible) return;
             if (startID.Any(x => x.id == id)) return;
             startID.Add(new StartID
             {
@@ -64,7 +65,7 @@ namespace SyncFlash
             return result;
         }
         public void AddLine(string text)
-        { 
+        {
             string result = ">" + text;
             log.AddLine(result);
         }

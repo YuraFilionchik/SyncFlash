@@ -44,7 +44,7 @@ namespace SyncFlash
                 foreach (var q in queues)
                 {
                     int i = dgv.Rows.Add();
-                   
+
                     dgv.Rows[i].Cells["Number"].Value = q.Number;
                     dgv.Rows[i].Cells["Source"].Value = q.SourceFile;
                     dgv.Rows[i].Cells["Target"].Value = q.TargetFile;
@@ -67,7 +67,7 @@ namespace SyncFlash
                     dgv.Rows[i].Cells["check"].Value = q.Active;
 
                 }
-                label1.Text = $"Total: {queues.Count()} files. \t\t New {queues.Count(c=>c.isNewFile)} files"; 
+                label1.Text = $"Total: {queues.Count()} files. \t\t New {queues.Count(c => c.isNewFile)} files";
             }
             catch (Exception ex)
             {
@@ -96,7 +96,7 @@ namespace SyncFlash
                 //add exceptions
                 if (AddExceptions)
                 {
-                    var cfg =Form1.cfg; //manager of file config
+                    var cfg = Form1.cfg; //manager of file config
                     var Projects = cfg.ReadAllProjects();
                     var pr = Projects.First(x => x.Alldirs.Any(c => c.Contains(ExceptionsList[0].SourceFileProjectDir))); //selected proj
                     foreach (Queue q in ExceptionsList)

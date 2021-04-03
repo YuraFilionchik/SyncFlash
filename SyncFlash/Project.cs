@@ -9,7 +9,7 @@ using filesdates = System.Collections.Generic.Dictionary<string, System.DateTime
 
 namespace SyncFlash
 {
-public    class Project
+    public class Project
     {
         private MyTimer timer = new MyTimer(Form1.log);
         public List<Projdir> AllProjectDirs; //список всех папок для синхронизации
@@ -51,9 +51,9 @@ public    class Project
 
         public void RemoveDir(string dir)
         {
-           // timer.Start("removeing dir", 1);
+            // timer.Start("removeing dir", 1);
             if (AllProjectDirs.Any(x => x.Dir == dir)) AllProjectDirs.Remove(GetProjDirFromString(dir));
-           // timer.Stop(1);
+            // timer.Stop(1);
         }
 
         //возвращает тип Project по названию папки
@@ -95,7 +95,7 @@ public    class Project
     /// <summary>
     /// Класс представляющий одну папку для данного проекта
     /// </summary>
- public   class Projdir
+    public class Projdir
     {
         MyTimer tmr;
         public string _dir;
@@ -139,7 +139,7 @@ public    class Project
             {
                 //tmr.Start("Checking isOnline: "+Dir, 2);
                 return Directory.Exists(Dir);
-               // tmr.Stop(2);
+                // tmr.Stop(2);
             }
         }
         private filesdates _allfiles;
@@ -170,15 +170,15 @@ public    class Project
             string ABSpath = Dir + relateFilePath;
             foreach (var file in AllFiles())
             {
-               
+
                 // if (Form1.GetRelationPath(file.Key, Dir) == relateFilePath)
                 if (file.Key == ABSpath)
                 {
-                    
-                   // tmr.AddLine("Find file " + ABSpath);
+
+                    // tmr.AddLine("Find file " + ABSpath);
                     return file;
                 }
-               
+
 
             }
             return new KeyValuePair<string, DateTime>();
@@ -189,14 +189,14 @@ public    class Project
         public filesdates AllFiles()
         {
             filesdates res = new filesdates();
-            if (!IsOnline)  return res; 
+            if (!IsOnline) return res;
             string[] AllFiles;
             if (_allfiles == null)
             {
-               // tmr.Start("===GetFilesInDir = " + Dir, 22);
-               // CONSTS.AddToTempLine("Получение файлов из " + Dir);
+                // tmr.Start("===GetFilesInDir = " + Dir, 22);
+                // CONSTS.AddToTempLine("Получение файлов из " + Dir);
                 AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
-              //  tmr.Stop(22);
+                                               //  tmr.Stop(22);
             }
             else return _allfiles;
             var n = AllFiles.Count();
@@ -229,11 +229,11 @@ public    class Project
         }
         private string[] GetfilesIndir(string dir)
         {
-            
+
             string relativeDir = dir.Contains(":\\") ? Form1.GetRelationPath(dir, this.Dir) : dir;//относительный путь
             var result = new string[0];
             if (FromProject.ExceptionDirs.Contains(relativeDir))//filter by ExceptionDirs
-            {  return result; }
+            { return result; }
             if (Directory.GetDirectories(dir).Count() == 0)
             { return Directory.GetFiles(dir); }//file in root dir
 
@@ -242,12 +242,12 @@ public    class Project
                 result = result.Concat(Directory.GetFiles(dir)).ToArray();
                 foreach (var D in Directory.GetDirectories(dir))
                 {
-                   
+
                     result = result.Concat(GetfilesIndir(D)).ToArray();
-                    
+
                 }
             }
-           
+
             return result;
         }
         /// <summary>
