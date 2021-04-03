@@ -35,7 +35,7 @@ namespace SyncFlash
             {
                 List_Projects.Items.Add(p.ToString());
             }
-            DriveLette = CONSTS.GetDriveLetter();
+            DriveLette = CONSTS.DriveLetter;
             button1.Text = CONSTS.btSyncText1;
             this.FormClosing += Form1_FormClosing;
             List_Projects.SelectedIndexChanged += List_Projects_SelectedIndexChanged;

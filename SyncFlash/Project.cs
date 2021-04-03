@@ -14,6 +14,7 @@ public    class Project
         private MyTimer timer = new MyTimer(Form1.log);
         public List<Projdir> AllProjectDirs; //список всех папок для синхронизации
         public List<string> ExceptionDirs; //папки исключения
+
         public List<Projdir> OnlineDirs//доступные сейчас
         {
             get
@@ -119,7 +120,7 @@ public    class Project
             get
             {
                 if (PC_Name == CONSTS.FlashDrive) //если флешка, то добавит букву диска
-                    return (CONSTS.GetDriveLetter() + _dir);
+                    return (CONSTS.DriveLetter + _dir);
                 else return _dir;
             }
             set
@@ -136,9 +137,9 @@ public    class Project
         {
             get
             {
-                tmr.Start("Checking isOnline: "+Dir, 2);
+                //tmr.Start("Checking isOnline: "+Dir, 2);
                 return Directory.Exists(Dir);
-                tmr.Stop(2);
+               // tmr.Stop(2);
             }
         }
         private filesdates _allfiles;
@@ -192,10 +193,10 @@ public    class Project
             string[] AllFiles;
             if (_allfiles == null)
             {
-                tmr.Start("===GetFilesInDir = " + Dir, 22);
+               // tmr.Start("===GetFilesInDir = " + Dir, 22);
                // CONSTS.AddToTempLine("Получение файлов из " + Dir);
                 AllFiles = GetfilesIndir(Dir); //запуск поиска всех файлов директории проекта
-                tmr.Stop(22);
+              //  tmr.Stop(22);
             }
             else return _allfiles;
             var n = AllFiles.Count();
